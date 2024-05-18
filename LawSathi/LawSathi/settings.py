@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "Chatbot",
     "NewsPortal"
     "LawyerRecommendation"
+    
 ]
 
 MIDDLEWARE = [
