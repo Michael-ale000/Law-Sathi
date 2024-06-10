@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+<title>News</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" />
+<!-- <style>
+    .custom-image-size {
+        width: 100%; /* Full width */
+        height: auto; /* Maintain aspect ratio */
+    }
+    .media-left {
+        width: 100%; /* Ensures the figure takes full width */
+    }
+</style> -->
+<link rel="stylesheet" href="{% static 'newsportal.css' %}" />
+{% endblock title %}
+
+{% block content %}
+<div class="main">
+    {% for title, desc, i,url in mylist %}
+    {% if title %}
+    <div class="cardNews">
+        <span class="title">{{title}}</span>
+        <p class="description">{{ desc|default:title|truncatechars:100}}</p>
+        <a href="{{ url }}" class="anchor">Read More</a>
+        <img src="{% if i %}{{ i }}{% else %}{% static 'lawsathi.png' %}{% endif %}" alt="newsImage" class="cardImg">
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}
