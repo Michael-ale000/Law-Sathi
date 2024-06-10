@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "Chatbot",
     "NewsPortal",
     "LawyerRecommendation",
+    "VideoConsultation",
     
 ]
 
@@ -79,8 +80,12 @@ WSGI_APPLICATION = 'LawSathi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'LawSathi', 
+        'USER': 'postgres',
+        'PASSWORD': 'Peace@12',
+        'HOST': 'localhost', 
+        'PORT': '5432',
     }
 }
 
