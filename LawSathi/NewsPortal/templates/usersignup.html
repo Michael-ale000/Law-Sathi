@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Signup Page</title>
+    <link rel="stylesheet" href="{% static 'usersignup.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="logo">
+    <img  src=" {% static 'lawsathi1.png' %} " class="logo"></a>
+    </div>
+    <div class="container">
+        <form method="POST" action="{%url 'usersignup' %}" class="signup-form">
+            {% csrf_token %}
+            <h1>Create Account For User</h1>
+            <div class="input-group">
+                {{usersignup_from.first_name}}
+                {{usersignup_from.last_name}}
+                
+            </div>
+            <br>
+            {{usersignup_from.username}}
+            <br>
+            {{usersignup_from.email}}
+            <br>
+            {{usersignup_from.password1}}
+            <br>
+            <br>
+            {{usersignup_from.password2}}
+            <br>
+            <div class="input-group">
+                {{moreinfo_form.gender}}
+                {{moreinfo_form.phone_number}}
+            </div>
+            <br>
+            <div class="input-group"><label for="dob" style="display: inline-block; color: white; font-size: 34px;">Date of Birth:</label>
+                {{moreinfo_form.dob}}
+    
+            </div>
+            <br>
+            <button type="submit" class="button"><a href="#">Create Account</a></button>
+            <div class="additional-options">
+                <p>Already have an account? <a href="#">Login</a></p>
+                <div class="separator">or</div>
+                <button type="button" class="google-button"><a href="#">Sign up with Google</a></button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

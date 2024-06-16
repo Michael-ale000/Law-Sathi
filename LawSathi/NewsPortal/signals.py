@@ -8,4 +8,4 @@ def create_or_update_mpreuserinfo(sender,instance,created,**kwargs):
     if created:
         MoreUserInfo.objects.create(user=instance)
     else:
-        instance.profile.save()
+        instance.moreuserinfo.save()
