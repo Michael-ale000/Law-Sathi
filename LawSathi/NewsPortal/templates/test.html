@@ -1,0 +1,6 @@
+<form method="POST" action="{% url 'usersignup' %}" >
+    {% csrf_token %}
+    {{ usersignup_from.as_p }}
+    {{ moreinfo_form}}
+    <button type="submit">Save changes</button>
+</form>
