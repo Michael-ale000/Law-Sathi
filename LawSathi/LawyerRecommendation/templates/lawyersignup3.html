@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup For a Lawyer</title>
+    <link rel="stylesheet" href="{% static 'lawyersignup3.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="logo">
+        <img src="{% static 'lawsathi1.png' %}" class="logo">
+    </div>
+    <div class="container">
+        <form class="signup-form" action="{% url 'lawyersignup3' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token%}
+            <h1>Create Account For Lawyer</h1>
+            <h2> License Certificate</h2>
+            <div class="file-upload">
+                {{documents_form.license_certificate}}
+                <div class="file-upload-label">
+                    Drag your files here or click in this area.
+                </div>
+            </div>
+            <br>
+            <h2>Citizenship</h2>
+            <div class="file-upload">
+                {{documents_form.citizenship_document}}
+                <div class="file-upload-label">
+                    Drag your files here or click in this area.
+                </div>
+            </div>
+            <br>
+            <h2>Photo</h2>
+            <div class="file-upload">
+                {{documents_form.personal_photos}}
+                <div class="file-upload-label">
+                    Drag your files here or click in this area.
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="button">Submit</button>
+        </form>
+    </div>
+    <script>
+        document.querySelectorAll('.file-upload input[type="file"]').forEach(inputElement => {
+            const fileUploadLabel = inputElement.nextElementSibling;
+
+            inputElement.addEventListener('change', event => {
+                const fileName = event.target.files.length > 0 ? event.target.files[0].name : '';
+                if (fileName) {
+                    fileUploadLabel.innerHTML = fileName;
+                } else {
+                    fileUploadLabel.innerHTML = 'Drag your files here or click in this area.';
+                }
+            });
+
+            fileUploadLabel.addEventListener('click', () => {
+                inputElement.click();
+            });
+
+            fileUploadLabel.addEventListener('dragover', event => {
+                event.preventDefault();
+                fileUploadLabel.classList.add('dragover');
+            });
+
+            fileUploadLabel.addEventListener('dragleave', event => {
+                event.preventDefault();
+                fileUploadLabel.classList.remove('dragover');
+            });
+
+            fileUploadLabel.addEventListener('drop', event => {
+                event.preventDefault();
+                inputElement.files = event.dataTransfer.files;
+                const fileName = inputElement.files.length > 0 ? inputElement.files[0].name : '';
+                if (fileName) {
+                    fileUploadLabel.innerHTML = fileName;
+                } else {
+                    fileUploadLabel.innerHTML = 'Drag your files here or click in this area.';
+                }
+                fileUploadLabel.classList.remove('dragover');
+            });
+        });
+    </script>
+</body>
+</html>
