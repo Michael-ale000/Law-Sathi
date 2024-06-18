@@ -1,7 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils.html import strip_tags
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 # Create your laywer models here.
 
 #Laywaer address
@@ -33,7 +37,9 @@ class LawyerDetails(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     
     def __str__(self):
-        return f"{self.user.username} - {self.bar_license}"
+        if self.user_id:
+            return f"{self.user.username}"
+        return f"LawyerDetails - {self.bar_license}"
 
 #lawyer documents
 class LawyerDocuments(models.Model):
@@ -44,3 +50,22 @@ class LawyerDocuments(models.Model):
 
     def __str__(self):
         return f"Dcouments of {self.user.username}"
+    
+@receiver(post_save, sender=LawyerDetails)
+def accept_or_reject_email(sender, instance, created, **kwargs):
+    # print(instance.user)
+    if instance.status == 'rejected':
+        subject = 'Sorry! Your form has been rejected'
+        html_message = render_to_string('reject_emailtemplate.html', {'lawyer_name': instance.user.username})
+        plain_message = strip_tags(html_message)
+        from_email = 'your_email@gmail.com'  # Sender email address
+        to_email = instance.user.email  # Lawyer's email address
+        send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
+        User.objects.get(username=instance.user).delete()
+    if instance.status == 'approved':  # Check if status is 'approved'
+        subject = 'Congratulations! Your form has been accepted'
+        html_message = render_to_string('approved_emailtemplate.html', {'lawyer_name': instance.user.username})
+        plain_message = strip_tags(html_message)
+        from_email = 'your_email@gmail.com'  # Sender email address
+        to_email = instance.user.email  # Lawyer's email address
+        send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)

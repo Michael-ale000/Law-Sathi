@@ -72,10 +72,13 @@ def laywersignup3(request):
                         #storing lawyer documents 
                             lawyer_documents = documents_form.save(commit = False)
                             user = get_object_or_404(User, pk=user_id)
+                            print(user)
                             lawyer_documents.user =User.objects.get(pk=user_id)
                             lawyer_documents.save()
-                            user.is_completed_forlawyer = True
-                            user.save()
+                            user = User.objects.get(pk=user_id)
+                            more_user_info= MoreUserInfo.objects.get(user=user)
+                            more_user_info.is_completed_for_lawyer = True  # or False, depending on your logic
+                            more_user_info.save()
                             del request.session['user_id']
                             return HttpResponse("lawayer account created successfully")
                     except IntegrityError:
