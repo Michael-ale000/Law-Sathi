@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup For a Lawyer</title>
+    <link rel="stylesheet" href="{% static 'lawyersignup2.css' %} ">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <div class="logo">
+    <img  src="{% static 'lawsathi1.png' %}" class="logo"></a>
+    </div>
+    <div class="container">
+        <form method = 'POST' action="{%url 'lawyersignup2'%}" class="signup-form">
+            {% csrf_token %}
+            <h1>Create Account For Lawyer</h1>
+            <h2>Professional Credentials</h2>
+            <div class="input-group">
+                {{details_form.experience}}
+                {{details_form.bar_license}}
+            </div>
+            <br>
+            {{details_form.average_case_completion_days}}
+            <br>
+            <h2>Permanent Address
+            </h2>
+            {{details_form.permanent_address}}
+            <h2>Office Address</h2>
+            
+            <div class="input-group">
+                
+                {{office_address_form.province}}
+                {{office_address_form.district}}
+            </div>
+            <br>
+            {{office_address_form.location}}
+            <br>
+            <button type="submit" class="button"><a>Next</a></button>
+        </form>
+    </div>
+<script>
+    const districtsByprovince = {
+    koshi: ['Bhojpur', 'Dhankuta', 'Ilam', 'Jhapa', 'Khotang', 'Morang', 'Okhaldhunga', 'Pachthar', 'Sankhuwasabha', 'Solukhumbu', 'Sunsari', 'Taplejung', 'Terhathum', 'Udayapur' ],
+    madhesh: ['Parsa', 'Bara', 'Rautahat', 'Sarlahi', 'Siraha', 'Dhanusha', 'Saptari', 'Mahottari'],
+    bagmati: ['Bhaktapur', 'Chitwan', 'Dhading', 'Dolakha', 'Kathmandu', 'Kavrepalanchok', 'Lalitpur', 'Makwanpur', 'Nuwakot', 'Ramechap', 'Rasuwa', 'Sindhuli', 'Sindhupalchok'],
+    gandaki: ['Baglung', 'Gorkha', 'Kaski', 'Lamjung', 'Manang', 'Mustang', 'Myagdi', 'Nawalpur', 'Parwat', 'Syangja', 'Tanahun'],
+    lumbini: ['Kapilvastu', 'Parasi', 'Rupandehi', 'Arghakhanchi', 'Gulmi', 'Palpa', 'Dang', 'Pyuthan', 'Rolpa', 'Eastern Rukum', 'Banke', 'Bardiya'],
+    karnali: ['Western Rukum', 'Salyan', 'Dolpa', 'Humla', 'Jumla', 'Kalikot', 'Mugu', 'Surkhet', 'Dailekh', 'Jajarkot'],
+    sudurpaschim: ['Darchula', 'Bajhang', 'Bajura', 'Baitadi', 'Doti', 'Acham', 'Dadeldhura', 'Kanchanpur', 'Kailali'],
+};
+
+function populateDistricts() {
+    const provinceSelect = document.getElementById('province');
+    const districtSelect = document.getElementById('district');
+    const selectedprovince = provinceSelect.value;
+
+    // Clear previous options
+    districtSelect.innerHTML = '<option value="" disabled selected>Select a district</option>';
+
+    if (selectedprovince in districtsByprovince) {
+        districtsByprovince[selectedprovince].forEach(district => {
+            const option = document.createElement('option');
+            option.value = district;
+            option.textContent = district;
+            districtSelect.appendChild(option);
+        });
+    }
+}
+</script>
+</body>
+</html>
