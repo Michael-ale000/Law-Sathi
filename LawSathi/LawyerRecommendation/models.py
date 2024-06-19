@@ -61,14 +61,17 @@ class LawyerDetails(models.Model):
                            0.25 * (1 - avgDaysOfCompletion_normalized))
         return composite_score
 
+    
     def normalize_avgDaysOfCompletion(self):
         all_lawyers = LawyerDetails.objects.all()
+        if not all_lawyers.exists():
+            return 0  # Return 0 or some other default value if no lawyers exist
         avg_days = np.array([lawyer.average_case_completion_days for lawyer in all_lawyers]).reshape(-1, 1)
         scaler = MinMaxScaler()
         scaler.fit(avg_days)
         normalized_value = scaler.transform(np.array([[self.average_case_completion_days]]))[0][0]
         return normalized_value
-
+    
     def calculate_final_rating(self):
         composite_score = self.calculate_composite_score()
         if composite_score >= 2.5:
