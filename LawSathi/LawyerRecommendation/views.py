@@ -161,20 +161,22 @@ def login(request):
 
 
 def test(request):
-    if request.method =="POST":
-            user_form = UserSignUpForm(request.POST ,prefix='form1')
-            moreinfo_form= MoreUserInfoForm(request.POST, prefix='form2')  
-            if user_form.is_valid() and moreinfo_form.is_valid():
-                moreinfo_formdata = moreinfo_form.cleaned_data
-                moreinfo_formdata['dob'] = moreinfo_formdata['dob'].strftime('%Y-%m-%d')  # Convert date to string
-                request.session['user_formdata'] = user_form.cleaned_data
-                request.session['moreinfo_formdata'] = moreinfo_formdata
-                return redirect('lawyersignup2')
-    user_form = UserSignUpForm( prefix='form1')
-    moreinfo_form= MoreUserInfoForm(prefix='form2')
-    context = {'user_form':user_form,
-                    'moreinfo_form':moreinfo_form,}
-    return render (request,'lawyersignup1.html',context)
+        user_form = request.session.get('user_form')
+        moreinfo_form = request.session.get('moreinfo_form')
+        if not user_form or not moreinfo_form :
+            return redirect('lawyersignup1')
+        if request.method =="POST": 
+            details_form = LawyerDetailsForm(request.POST)
+            office_address_form = AddressForm(request.POST)
+            if details_form.is_valid() and office_address_form.is_valid():
+                request.session['details_form'] = details_form.cleaned_data
+                request.session['office_address_form'] = office_address_form.cleaned_data 
+                return redirect('lawyersignup3')
+        office_address_form = AddressForm()
+        details_form = LawyerDetailsForm()
+        context = {'office_address_form':office_address_form,
+                      'details_form':details_form,}
+        return render (request,'test.html',context)
 
 
 #previous way of creating lawayerid
