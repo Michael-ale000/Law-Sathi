@@ -91,7 +91,8 @@ def laywersignup3(request):
                             setattr(moreinfo, attr, value)
                         moreinfo.save()
                     
-                    address = Address.objects.create(**office_address_form)
+                    address = Address.objects.create(user = user ,
+                                                     **office_address_form)
                     lawyer_details = LawyerDetails.objects.create(
                         user=user,
                         office_address=address,

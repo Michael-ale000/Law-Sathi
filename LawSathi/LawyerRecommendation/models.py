@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 
 #Laywaer address
 class Address(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
     province =  models.CharField(max_length=100)
     district =  models.CharField(max_length=100)
     location =  models.CharField(max_length=100)
