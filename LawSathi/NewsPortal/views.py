@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.db import transaction,IntegrityError
@@ -6,11 +6,12 @@ import os,requests
 from dotenv import load_dotenv
 from .form import UserSignUpForm,MoreUserInfoForm
 from .models import MoreUserInfo
+from django.contrib.auth import authenticate,login
 
 # Create your views here.
 load_dotenv()
 
-def landingpage(request):
+def user_landingpage(request):
     api_key = os.getenv("Newsportal_api")
     url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey={}'.format(api_key)
     news = requests.get(url).json()
@@ -52,7 +53,7 @@ def usersignup(request):
                             for attr, value in moreinfo_data.items():
                                 setattr(moreinfo, attr, value)
                             moreinfo.save()
-                        return render(request, 'login.html')
+                        return redirect('userlogin')
                 except IntegrityError:
                     return HttpResponse("Error: Integrity Violation. User might already exist.")
                 except Exception as e:
@@ -65,3 +66,14 @@ def usersignup(request):
         # return HttpResponse("Error Occured")
     except IndexError:
         return HttpResponse("Error Occured thrown by try ")
+
+
+def userlogin(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request,username=username,password=password)
+        if user is not None:
+            login(request,user)
+            return redirect(user_landingpage)
+    return render(request,'userlogin.html')

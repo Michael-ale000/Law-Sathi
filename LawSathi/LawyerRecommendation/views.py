@@ -6,6 +6,7 @@ from NewsPortal.models import MoreUserInfo
 from django.contrib.auth.models import User
 from .models import Address,LawyerDetails,LawyerDocuments
 from datetime import date
+from django.contrib.auth import authenticate,login
 
 
 # Create your views here.
@@ -122,8 +123,25 @@ def laywersignup3(request):
 
 
 
-def login(request):
-      return render(request,'login.html')
+def lawyer_login(request):
+    print('run')
+    if request.method == "POST":
+        username = request.POST.get('username')
+        print(username)
+        password = request.POST.get('password')
+        user = authenticate(request,username=username,password=password)
+        if user is not None:
+            print(user)
+            status_check = LawyerDetails.objects.get(user=user)
+            lawyer_check = LawyerDetails.objects.get(user=user)
+            status = status_check.status
+            is_lawyer = lawyer_check.is_lawyer
+            print(status)
+            if status == "approved" and is_lawyer:
+                print(status)
+                login(request,user)
+                return HttpResponse (' lawyer login is successful')
+    return render(request,'lawyerlogin.html')
 
 
 

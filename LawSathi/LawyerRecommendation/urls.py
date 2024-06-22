@@ -5,6 +5,6 @@ urlpatterns=[
     path('lawyersignup2',views.lawyersignup2,name='lawyersignup2'),
     path('lawyersignup3',views.laywersignup3,name='lawyersignup3'),
     path('test',views.test,name='test'),
-    path('login',views.test,name='login'),
+    path('lawyerlogin',views.lawyer_login,name='lawyerlogin'),
    
 ]
