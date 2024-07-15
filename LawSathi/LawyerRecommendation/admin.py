@@ -2,7 +2,12 @@ from django.contrib import admin
 from .models import Address, LawyerDetails, LawyerDocuments
 
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('location', 'district', 'province')
+    list_display = ('user','location', 'district', 'province')
+
+    def user_name(self, obj):
+        return obj.user.username() 
+
+    user_name.short_description = 'User Name'
 
 admin.site.register(Address, AddressAdmin)
 
