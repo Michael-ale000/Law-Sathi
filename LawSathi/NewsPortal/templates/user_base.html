@@ -1,15 +1,18 @@
 {% load static %}
+
 <!DOCTYPE html>
 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href=" {% static 'base2.css' %}">
     <link rel="stylesheet" href=" {% static 'base.css' %}">
-    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+    
     {% block title %}
     {% endblock title %}
 </head>
@@ -44,12 +47,27 @@
                 </a>
                 <span class="tooltip">Home</span>
               </li>
+
               <li>
                 <a href="">
-                  <i class="bx bx-user"></i>
-                  <span class="links_name">Portfolio</span>
+                  <i class='bx bx-chat'></i>
+                  <span class="links_name">Chatbot</span>
                 </a>
-                <span class="tooltip">Portfolio</span>
+                <span class="tooltip">Chatbot</span>
+              </li>
+              <li>
+                <a href="">
+                  <i class='bx bx-search-alt'></i>
+                  <span class="links_name">Lawyer Search</span>
+                </a>
+                <span class="tooltip">Lawyer Search</span>
+              </li>
+              <li>
+                <a href="">
+                  <i class='bx bxs-video'></i>
+                  <span class="links_name">Conference</span>
+                </a>
+                <span class="tooltip">Conference</span>
               </li>
               <li>
                 <a href="">
@@ -82,5 +100,14 @@
 </div>
 {% block script %}{% endblock script %}
 <script src="{% static 'script.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    {% if messages %}
+    {% for message in messages %}
+        <script>
+            toastr["{{ message.tags }}"]("{{ message|escapejs }}");
+        </script>
+    {% endfor %}
+{% endif %}
 </body>
 </html>

@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from .models import Address,LawyerDetails,LawyerDocuments
 from datetime import date
 from django.contrib.auth import authenticate,login
+from django.contrib import messages
+from django.urls import reverse
 
 
 # Create your views here.
@@ -30,7 +32,12 @@ def lawyersignup1(request):
                     moreinfo_form['dob'] = serialize_date(moreinfo_form['dob'])
                 request.session['user_form'] = user_form.cleaned_data
                 request.session['moreinfo_form'] = moreinfo_form
+                messages.success(request,'Form Data Were Valid')
                 return redirect('lawyersignup2')
+            else :
+                for field, errors in user_form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
         user_form = UserSignUpForm( prefix='form1')
         moreinfo_form= MoreUserInfoForm(prefix='form2')
         context = {'user_form':user_form,
@@ -51,7 +58,12 @@ def lawyersignup2(request):
             if details_form.is_valid() and office_address_form.is_valid():
                 request.session['details_form'] = details_form.cleaned_data
                 request.session['office_address_form'] = office_address_form.cleaned_data 
+                messages.success(request,'Form Data Were Valid')
                 return redirect('lawyersignup3')
+            else :
+                for field, errors in details_form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
         office_address_form = AddressForm()
         details_form = LawyerDetailsForm()
         context = {'office_address_form':office_address_form,
@@ -109,7 +121,8 @@ def laywersignup3(request):
                     more_user_info.save()
 
                     request.session.flush()
-                    return HttpResponse("Lawyer account created successfully")
+                    messages.success(request,'Form Submiteed Sucessfully. Wait For Conformation Mail.')
+                    return redirect('lawyerlogin')
     
         documents_form = LawyerDocumentsForm(prefix='form5')
         context = {'documents_form': documents_form}
@@ -124,26 +137,35 @@ def laywersignup3(request):
 
 
 def lawyer_login(request):
-    print('run')
-    if request.method == "POST":
-        username = request.POST.get('username')
-        print(username)
-        password = request.POST.get('password')
-        user = authenticate(request,username=username,password=password)
-        if user is not None:
-            print(user)
-            status_check = LawyerDetails.objects.get(user=user)
-            lawyer_check = LawyerDetails.objects.get(user=user)
-            status = status_check.status
-            is_lawyer = lawyer_check.is_lawyer
-            print(status)
-            if status == "approved" and is_lawyer:
-                print(status)
-                login(request,user)
-                return HttpResponse (' lawyer login is successful')
-    return render(request,'lawyerlogin.html')
+    try:
+        if request.method == "POST":
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request,username=username,password=password)
+            if user is not None:
+                try:
+                    status_check = LawyerDetails.objects.get(user=user)
+                    lawyer_check = LawyerDetails.objects.get(user=user)
+                    status = status_check.status
+                    is_lawyer = lawyer_check.is_lawyer
+                    if is_lawyer:
+                        if status == "approved":
+                            login(request,user)
+                            messages.success(request,'Loged In Successfully')
+                            return HttpResponse (' lawyer login is successful')
+                        else:
+                            messages.error(request,'Form Is Not Accepted. Wait For Conformation Mail.')
+                            return render(request,'lawyerlogin.html')
 
+                except LawyerDetails.DoesNotExist:
+                    messages.error(request,'Your Are A General User. Login As A General User.')
+                    url = reverse('userlogin')
+                    return redirect(url)
+            messages.error(request,'Username or Password Is Invalid')
+        return render(request,'lawyerlogin.html')
 
+    except Exception as e:
+        return HttpResponse(f"Error Occurred: {e}")
 
 
 

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Signup Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="{% static 'lawyersignup1.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,10 +58,20 @@
     
             </div>
             <br>
-            <button type="submit" class="button"><a>NEXT</a></button>
+            <button type="submit" class="button"><a>NEXT</a></button><br>
             <div class="additional-options">
-                <p>Already have an account? <a href="#">Login</a></p>
+                <label for="dob" style="display: inline-block; color: white; font-size: 34px;">Already have an account? </label>
+                <label for="dob" style="display: inline-block; color: white; font-size: 34px;"><a href="{% url 'lawyerlogin'%}">Login</a></label>
         </form>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    {% if messages %}
+    {% for message in messages %}
+        <script>
+            toastr["{{ message.tags }}"]("{{ message|escapejs }}");
+        </script>
+    {% endfor %}
+{% endif %}
 </body>
 </html>

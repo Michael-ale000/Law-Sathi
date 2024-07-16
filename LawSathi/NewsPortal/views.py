@@ -7,33 +7,38 @@ from dotenv import load_dotenv
 from .form import UserSignUpForm,MoreUserInfoForm
 from .models import MoreUserInfo
 from django.contrib.auth import authenticate,login
-
+from LawyerRecommendation.models import LawyerDetails
+from django.urls import reverse
+from django.contrib import messages
 # Create your views here.
 load_dotenv()
 
 def user_landingpage(request):
-    api_key = os.getenv("Newsportal_api")
-    url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey={}'.format(api_key)
-    news = requests.get(url).json()
+    try:
+        api_key = os.getenv("Newsportal_api")
+        url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey={}'.format(api_key)
+        news = requests.get(url).json()
 
-    a = news['articles']
-    desc =[]
-    title =[]
-    img =[]
-    url=[]
+        a = news['articles']
+        desc =[]
+        title =[]
+        img =[]
+        url=[]
 
-    for i in range(len(a)):
-        f = a[i]
-        title.append(f['title'])
-        desc.append(f['description'])
-        img.append(f['urlToImage'])
-        url.append(f['url'])
-    mylist = zip(title, desc, img,url)
-    # print(title)
+        for i in range(len(a)):
+            f = a[i]
+            title.append(f['title'])
+            desc.append(f['description'])
+            img.append(f['urlToImage'])
+            url.append(f['url'])
+        mylist = zip(title, desc, img,url)
+        # print(title)
 
-    context = {'mylist': mylist}
+        context = {'mylist': mylist}
 
-    return render(request, 'newsportal.html', context)
+        return render(request, 'newsportal.html', context)
+    except Exception as e:
+        return HttpResponse(f"Error Occurred: {e}")
 
 
 def usersignup(request):
@@ -53,27 +58,44 @@ def usersignup(request):
                             for attr, value in moreinfo_data.items():
                                 setattr(moreinfo, attr, value)
                             moreinfo.save()
+                            messages.success(request, 'Account created successfully.')
                         return redirect('userlogin')
                 except IntegrityError:
                     return HttpResponse("Error: Integrity Violation. User might already exist.")
                 except Exception as e:
                     return HttpResponse(f"Error Occurred: {e}")
+            else:
+            # If form is not valid, add form errors to messages
+                for field, errors in usersignup_from.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
         usersignup_from = UserSignUpForm()
         moreinfo_form = MoreUserInfoForm()
         context = {'usersignup_from':usersignup_from,
         'moreinfo_form':moreinfo_form}
         return render(request,'usersignup.html',context)
         # return HttpResponse("Error Occured")
-    except IndexError:
-        return HttpResponse("Error Occured thrown by try ")
+    except Exception as e:
+        return HttpResponse(f"Error Occurred: {e}")
 
 
 def userlogin(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request,username=username,password=password)
-        if user is not None:
-            login(request,user)
-            return redirect(user_landingpage)
-    return render(request,'userlogin.html')
+    try:
+        if request.method == "POST":
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request,username=username,password=password)
+            if user is not None:
+                try:
+                    is_lawyer = LawyerDetails.objects.get(user=user)
+                    messages.error(request, 'You Are Lawyer. Login As A Lawayer')
+                    url = reverse('lawyerlogin')
+                    return redirect(url)
+                except LawyerDetails.DoesNotExist:
+                    login(request,user)
+                    messages.success(request, 'Login Successful.')
+                return redirect(user_landingpage)     
+            messages.error(request, 'Invalid Username or Password.')
+        return render(request,'userlogin.html')
+    except Exception as e:
+        return HttpResponse(f"Error Occurred: {e}")
