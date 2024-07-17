@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href=" {% static 'base2.css' %}">
+    <link rel="stylesheet" href=" {% static 'base.css' %}">
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+    {% block title %}
+    {% endblock title %}
+</head>
+<body>
+    <div class="header">
+        <img src="{% static 'lawsathi.png' %}" alt="logo" class="logo">
+        <div class="headerItems">
+            <div class="navitem">
+                <i class="fas fa-comment"></i>
+            </div>    
+            <div class="navitem">
+                <i class="fas fa-bell loading-screen-other-icons"></i>
+            </div>
+            <div class="navitem">
+                <i class="fas fa-user-circle loading-screen-other-icons" style="font-size: 40px"></i>
+            </div>
+        </div>
+    </div>
+    
+        <div class="sidebar">
+            <div class="logo-details">
+              <!-- <i class="bx bx-money icon" ></i> -->
+              <!-- <img src='lawsathi.png' alt="logo" class="logo"> -->
+              <i class="bx bx-menu" id="btn"></i>
+            </div>
+            <ul class="nav-list">
+      
+              <li>
+                <a href="landing">
+                  <i class="bx bx-grid-alt"></i>
+                  <span class="links_name">Home</span>
+                </a>
+                <span class="tooltip">Home</span>
+              </li>
+              <li>
+                <a href="">
+                  <i class="bx bx-user"></i>
+                  <span class="links_name">Portfolio</span>
+                </a>
+                <span class="tooltip">Portfolio</span>
+              </li>
+              <li>
+                <a href="">
+                  <i class="bx bx-cog"></i>
+                  <span class="links_name">Settings</span>
+                </a>
+                <span class="tooltip">Settings</span>
+              </li>
+              <li>
+                <a href=''>
+                  <i class="bx bx-log-out" id="log_out"></i>
+                  <span class="links_name">LogOut</span>
+                </a>
+                <span class="tooltip">LogOut</span>
+              </li>
+              
+                
+              </li>
+            </ul>
+          </div>
+          <section class="home-section">
+            {% block content %}
+            {% endblock content %}
+          </section>
+        
+            
+        </div>
+    </div>    
+
+</div>
+{% block script %}{% endblock script %}
+<script src="{% static 'script.js' %}"></script>
+</body>
+</html>

@@ -45,9 +45,10 @@
                     <a class="forgot_pw" href="#">Forgot password?</a>
                 </div>
                 <button class="submit" type="submit">Login</button>
+            </form>
                 <div class="or">OR</div>
                 <div class="social-login">
-                    <button class="gsi-material-button">
+                    <button class="gsi-material-button" >
                         <div class="gsi-material-button-state"></div>
                         <div class="gsi-material-button-content-wrapper">
                             <div class="gsi-material-button-icon">
@@ -59,8 +60,9 @@
                                     <path fill="none" d="M0 0h48v48H0z"></path>
                                 </svg>
                             </div>
+                            <a href="{% url 'social:begin' 'google-oauth2' %}">
                             <span class="gsi-material-button-contents">Sign in with Google</span>
-                            <span style="display: none;">Sign in with Google</span>
+                            <span style="display: none;">Sign in with Google</span></a>
                         </div>
                     </button>
                 </div>
@@ -71,7 +73,7 @@
                 <button class="button" type="button">Register</button>
             </div>
         </div>
-        </form>
+        
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

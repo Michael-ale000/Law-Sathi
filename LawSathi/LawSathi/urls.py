@@ -25,6 +25,7 @@ urlpatterns = [
     path('',include('LawyerRecommendation.urls')),
     path('',include('Chatbot.urls')),
     path('',include('VideoConsultation.urls')),
+    path('social/', include('social_django.urls', namespace='social')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

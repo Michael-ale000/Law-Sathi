@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "NewsPortal",
     "LawyerRecommendation",
     "VideoConsultation",
+    'social_django', #for gmail login
     
 ]
 
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',#exception handeling of social login
 ]
 
 ROOT_URLCONF = 'LawSathi.urls'
@@ -67,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -82,7 +86,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'LawSathi', 
-        'USER': 'postgres',
+        'USER': 'postgres1',
         'PASSWORD': 'Peace@12',
         'HOST': 'localhost', 
         'PORT': '5432',
@@ -146,3 +150,18 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') 
+
+
+#soial app custom settings
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL= 'newsportal'
+LOGOUT_URL = 'logout'
+LOGOUT_REDIRECT_URL= 'userlogin' 
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('GOOGLE_CLIENT_ID') #'<your-client-id>'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('GOOGLE_SECRET_KEY')#<your-client-secret>'
