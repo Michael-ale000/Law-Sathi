@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href=" {% static 'base2.css' %}">
@@ -46,11 +45,11 @@
                 <span class="tooltip">Home</span>
               </li>
               <li>
-                <a href="{% url 'lawyer_videocall' %}">
-                  <i class="bx bxs-video"></i>
-                  <span class="links_name">Conference</span>
+                <a href="">
+                  <i class="bx bx-user"></i>
+                  <span class="links_name">Portfolio</span>
                 </a>
-                <span class="tooltip">Conference</span>
+                <span class="tooltip">Portfolio</span>
               </li>
               <li>
                 <a href="">
@@ -60,7 +59,7 @@
                 <span class="tooltip">Settings</span>
               </li>
               <li>
-                <a href="{% url 'logout' %}">
+                <a href=''>
                   <i class="bx bx-log-out" id="log_out"></i>
                   <span class="links_name">LogOut</span>
                 </a>
@@ -83,15 +82,5 @@
 </div>
 {% block script %}{% endblock script %}
 <script src="{% static 'script.js' %}"></script>
-<script src="{% static 'script.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    {% if messages %}
-    {% for message in messages %}
-        <script>
-            toastr["{{ message.tags }}"]("{{ message|escapejs }}");
-        </script>
-    {% endfor %}
-{% endif %}
 </body>
 </html>

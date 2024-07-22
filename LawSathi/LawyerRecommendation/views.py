@@ -134,38 +134,61 @@ def laywersignup3(request):
          
 
 
+def lawyerlanding(request):
+     return render(request,'lawyerlanding.html')
 
-
-def lawyer_login(request):
+def logout(request):
     try:
-        if request.method == "POST":
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = authenticate(request,username=username,password=password)
-            if user is not None:
-                try:
-                    status_check = LawyerDetails.objects.get(user=user)
-                    lawyer_check = LawyerDetails.objects.get(user=user)
-                    status = status_check.status
-                    is_lawyer = lawyer_check.is_lawyer
-                    if is_lawyer:
-                        if status == "approved":
-                            login(request,user)
-                            messages.success(request,'Loged In Successfully')
-                            return HttpResponse (' lawyer login is successful')
-                        else:
-                            messages.error(request,'Form Is Not Accepted. Wait For Conformation Mail.')
-                            return render(request,'lawyerlogin.html')
-
-                except LawyerDetails.DoesNotExist:
-                    messages.error(request,'Your Are A General User. Login As A General User.')
-                    url = reverse('userlogin')
-                    return redirect(url)
-            messages.error(request,'Username or Password Is Invalid')
-        return render(request,'lawyerlogin.html')
-
+        logout(request)
+        messages.success(request,"Loged Out.")
+        return redirect('login')  # Redirect to the home page or any other page
     except Exception as e:
         return HttpResponse(f"Error Occurred: {e}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def lawyer_login(request):
+#     try:
+#         if request.method == "POST":
+#             username = request.POST.get('username')
+#             password = request.POST.get('password')
+#             user = authenticate(request,username=username,password=password)
+#             if user is not None:
+#                 try:
+#                     status_check = LawyerDetails.objects.get(user=user)
+#                     lawyer_check = LawyerDetails.objects.get(user=user)
+#                     status = status_check.status
+#                     is_lawyer = lawyer_check.is_lawyer
+#                     if is_lawyer:
+#                         if status == "approved":
+#                             login(request,user)
+#                             messages.success(request,'Loged In Successfully')
+#                             return HttpResponse (' lawyer login is successful')
+#                         else:
+#                             messages.error(request,'Form Is Not Accepted. Wait For Conformation Mail.')
+#                             return render(request,'lawyerlogin.html')
+
+#                 except LawyerDetails.DoesNotExist:
+#                     messages.error(request,'Your Are A General User. Login As A General User.')
+#                     url = reverse('userlogin')
+#                     return redirect(url)
+#             messages.error(request,'Username or Password Is Invalid')
+#         return render(request,'lawyerlogin.html')
+
+#     except Exception as e:
+#         return HttpResponse(f"Error Occurred: {e}")
 
 
 

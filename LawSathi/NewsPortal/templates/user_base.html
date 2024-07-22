@@ -41,7 +41,7 @@
             <ul class="nav-list">
       
               <li>
-                <a href="landing">
+                <a href="{% url 'user_landingpage' %}">
                   <i class="bx bx-grid-alt"></i>
                   <span class="links_name">Home</span>
                 </a>
@@ -63,7 +63,7 @@
                 <span class="tooltip">Lawyer Search</span>
               </li>
               <li>
-                <a href="">
+                <a href="{% url 'join_room' %}">
                   <i class='bx bxs-video'></i>
                   <span class="links_name">Conference</span>
                 </a>
@@ -77,7 +77,7 @@
                 <span class="tooltip">Settings</span>
               </li>
               <li>
-                <a href=''>
+                <a href="{% url 'logout' %}">
                   <i class="bx bx-log-out" id="log_out"></i>
                   <span class="links_name">LogOut</span>
                 </a>

@@ -1,18 +1,27 @@
-<html>
+{% extends 'user_base.html' %}
+{% load static %}
+{% block title %}
 
-<head>
-    <style>
+<style>
         #root {
             width: 100vw;
             height: 100vh;
+            background: #022534;
+            border-radius: 7px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
             }
     </style>
-</head>
+
+{% endblock title %}
 
 
-<body>
-    <div id="root"></div>
-</body>
+{% block content %}
+
+<div id="root"></div>
+{% endblock content%}
+
+
+{% block script %}
 <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
 <script>
 window.onload = function () {
@@ -21,15 +30,7 @@ window.onload = function () {
         const urlSearchParams = new URLSearchParams(urlStr);
         const result = Object.fromEntries(urlSearchParams.entries());
         return result;
-    }
-
-
-        // Generate a Token by calling a method.
-        // @param 1: appID
-        // @param 2: serverSecret
-        // @param 3: Room ID
-        // @param 4: User ID
-        // @param 5: Username
+    }   // Generate a Token by calling a method.// @param 1: appID// @param 2: serverSecret// @param 3: Room ID// @param 4: User ID// @param 5: Username
     const roomID = getUrlParams(window.location.href)['roomID'] || (Math.floor(Math.random() * 10000) + "");
     const userID = Math.floor(Math.random() * 10000) + "";
     const userName = "Username"
@@ -62,7 +63,14 @@ window.onload = function () {
            	showLayoutButton: true,
          
             });
-}
-</script>
+             // Assuming ZegoUIKitPrebuilt provides an event for call end
+    zp.on('callEnded', function() {
+        // Redirect to a different page
+        window.location.href = '/homepage'; // Change '/homepage' to your desired URL
+    });
+};
 
-</html>
+
+</script>
+{% endblock script %}
+

@@ -6,7 +6,7 @@ import os,requests
 from dotenv import load_dotenv
 from .form import UserSignUpForm,MoreUserInfoForm
 from .models import MoreUserInfo
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from LawyerRecommendation.models import LawyerDetails
 from django.urls import reverse
 from django.contrib import messages
@@ -59,7 +59,7 @@ def usersignup(request):
                                 setattr(moreinfo, attr, value)
                             moreinfo.save()
                             messages.success(request, 'Account created successfully.')
-                        return redirect('userlogin')
+                        return redirect('login')
                 except IntegrityError:
                     return HttpResponse("Error: Integrity Violation. User might already exist.")
                 except Exception as e:
@@ -79,7 +79,7 @@ def usersignup(request):
         return HttpResponse(f"Error Occurred: {e}")
 
 
-def userlogin(request):
+def user_login(request):
     try:
         if request.method == "POST":
             username = request.POST.get('username')
@@ -87,15 +87,37 @@ def userlogin(request):
             user = authenticate(request,username=username,password=password)
             if user is not None:
                 try:
-                    is_lawyer = LawyerDetails.objects.get(user=user)
-                    messages.error(request, 'You Are Lawyer. Login As A Lawayer')
-                    url = reverse('lawyerlogin')
-                    return redirect(url)
+                    status_check = LawyerDetails.objects.get(user=user)
+                    lawyer_check = LawyerDetails.objects.get(user=user)
+                    status = status_check.status
+                    is_lawyer = lawyer_check.is_lawyer
+                    if is_lawyer:
+                        if status == "approved":
+                            login(request,user)
+                            messages.success(request,'Loged In Successfully')
+                            url = reverse('lawyerlanding')
+                            return redirect(url)
+                        else:
+                            messages.error(request,'Form Is Not Accepted. Wait For Conformation Mail.')
+                            return render(request,'login.html')
+                    # messages.error(request, 'You Are Lawyer. Login As A Lawayer')
+                    # url = reverse('lawyerlogin')
+                    # return redirect(url)
                 except LawyerDetails.DoesNotExist:
                     login(request,user)
                     messages.success(request, 'Login Successful.')
                 return redirect(user_landingpage)     
             messages.error(request, 'Invalid Username or Password.')
-        return render(request,'userlogin.html')
+        return render(request,'login.html')
+    except Exception as e:
+        return HttpResponse(f"Error Occurred: {e}")
+    
+
+
+def logout(request):
+    try:
+        logout(request)
+        messages.success(request,"Loged Out.")
+        return redirect('login')  # Redirect to the home page or any other page
     except Exception as e:
         return HttpResponse(f"Error Occurred: {e}")
