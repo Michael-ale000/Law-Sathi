@@ -1,0 +1,150 @@
+body {
+            font-family: 'Inter', sans-serif;
+            font-feature-settings: 'liga' 1, 'calt' 1;
+            font-size: 1rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1.5;
+            background-color: #19394A;
+            margin: 0;
+            background-image: url('Untitled design (4) 1.png');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            overflow: hidden;
+            color: #F5E290;
+        }
+
+        .logo {
+            flex-shrink: 0;
+            margin: 1rem;
+            width: 20vw;
+            max-width: 20vw;
+            height: auto;
+        }
+
+        .signup-container {
+            margin: 5% auto;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        h1 {
+            margin-bottom: 1.5rem;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .signup-options {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .signup-option {
+            background-color: #0D2A37;
+            border-radius: 10px;
+            padding: 1.5rem;
+            width: 45%;
+            max-width: 150px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            border: 2px solid rgba(245, 226, 144, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .signup-option:hover {
+            transform: scale(1.05);
+            background-color: #12394A;
+            border: 2px solid #F5E290;
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 0.5rem;
+        }
+
+        .lawyer-icon {
+            background-image: url('https://img.icons8.com/?size=100&id=BGVD49kNT0LA&format=png&color=F5E290');
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-left: 20%;
+        }
+
+        .user-icon {
+            background-image: url('https://img.icons8.com/?size=100&id=fJ7hcfUGpKG7&format=png&color=F5E290');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .signup-option span {
+            color: #F5E290;
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .signup-container {
+                width: 90%;
+                padding: 1rem;
+            }
+
+            .signup-option {
+                width: 45%;
+                max-width: 150px;
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .signup-option span {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .signup-container {
+                width: 95%;
+                padding: 0.5rem;
+            }
+
+            .signup-option {
+                width: 100%;
+                max-width: none;
+                padding: 0.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .signup-option span {
+                font-size: 0.875rem;
+            }
+
+            .icon {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 0.25rem;
+            }
+        }

@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href=" {% static 'choose.css' %}">
+
+</head>
+<body>
+    <img class="logo" src=" {% static 'law.png' %} ">
+    <div class="signup-container">
+    <h1>Sign-up As?</h1>
+    <div class="signup-options">
+      <div class="signup-option">
+        <a href="{% url 'lawyersignup1' %}">
+        <div class="icon lawyer-icon"></div>
+        <span>LAWYER</span>
+      </div>
+      <div class="signup-option">
+        <a href="{% url 'usersignup' %}">
+        <div class="icon user-icon"></div>
+        <span>USER</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

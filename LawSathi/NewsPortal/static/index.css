@@ -1,0 +1,446 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  scroll-behavior: smooth;
+}
+
+.landing-page, .section.full-height {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 5rem;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: var(--primary-blue-900, #12394A);
+}
+
+.header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 5%;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--gradient-black-background-image, linear-gradient(304.42deg, rgba(0, 0, 0, 0.45) 94.9%, rgba(0, 0, 0, 0.45) 203%));
+  box-shadow: 0px 4px 4px 0px rgba(255, 255, 255, 0.25);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  width: 16rem;
+  height: auto;
+}
+
+.topnavbar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 75%;
+}
+
+.login-signup {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  margin-bottom: 1.75rem;
+}
+
+.login-button, .signup-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.75rem;
+  width: 8rem;
+  box-sizing: border-box;
+  margin-right: 1.75rem;
+  cursor: pointer;
+  text-decoration: none; /* Remove underline from links */
+  border-radius: 5px; /* Added border-radius for button-like appearance */
+}
+
+.login-button {
+  background-color: var(--primary-blue-900, #12394A);
+  box-shadow: inset 4px 4px 7px rgba(255, 255, 255, 0.04), 4px 4px 7px rgba(0, 0, 0, 0.25);
+  border: 1.2px solid rgba(202, 148, 198, 0.3);
+  color: var(--white, #FFFFFF);
+}
+
+.signup-button {
+  box-shadow: inset 4px 4px 7px rgba(255, 255, 255, 0.04), 4px 4px 7px rgba(0, 0, 0, 0.25);
+  border: 2px solid #F5E290;
+  color: #F5E290;
+}
+
+.login-text, .signup-text {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.signup-text {
+  color: #F5E290;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+  max-width: 800px;
+  box-sizing: border-box;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.nav-text {
+  font-weight: 400;
+  font-size: 1rem;
+  color: #F5E290;
+  text-decoration: none;
+}
+
+.nav-text:hover {
+  text-decoration: underline;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 4rem 5%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.content-wrapper {
+  max-width: 50%;
+}
+
+.headline {
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-weight: black;
+  font-size: 3rem;
+  color: #F5E290;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--white, #FFFFFF);
+}
+
+.description {
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--white, #FFFFFF);
+  margin-bottom: 3rem;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-top: 2rem;
+}
+
+.bottom-photo {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 4px 4px 30px #000000;
+}
+
+.section {
+  padding: 4rem 5%;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--primary-blue-900, #12394A);
+  color: #ffffff;
+}
+
+.section.full-height {
+  min-height: 100vh;
+  padding-bottom: 6rem; /* Added padding at the bottom */
+}
+
+.section-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #F5E290;
+}
+
+.section p, .section ul {
+  font-size: 1.25rem;
+  line-height: 1.75;
+}
+
+.section ul {
+  list-style: disc;
+  padding-left: 2rem;
+  text-align: left;
+}
+
+/* Carousel */
+.carousel {
+  position: relative;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  height: calc(100vh - 12rem); /* Adjusted height to fit with the added padding */
+  background: linear-gradient(135deg, #12394A 0%, #1F5A75 100%);
+}
+
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%; /* Ensure the inner content takes the full height */
+}
+
+.carousel-item {
+  min-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(18, 57, 74, 0.85); /* Semi-transparent background */
+  color: white;
+  padding: 2rem;
+  box-sizing: border-box;
+  height: 100%; /* Ensure each item takes the full height */
+  text-align: center;
+  flex-direction: column;
+  border: 2px solid #F5E290; /* Border around each carousel item */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+}
+
+.carousel-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+ .carousel-icon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 2rem; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} 
+
+.carousel-text {
+  flex: 1;
+  max-width: 800px; /* Limit text width for better readability */
+}
+
+.carousel-text h3 {
+  margin-bottom: 1rem;
+  font-size: 2.5rem; /* Larger font size for headers */
+  color: #F5E290;
+}
+
+.carousel-text p, .carousel-text ul {
+  font-size: 1.25rem;
+  line-height: 1.75;
+  margin-bottom: 1rem;
+  text-align: left; /* Left-align text for readability */
+}
+
+.carousel-text ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  text-align: left;
+}
+
+.carousel-control-prev, .carousel-control-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-control-prev:hover, .carousel-control-next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-control-prev {
+  left: 0;
+}
+
+.carousel-control-next {
+  right: 0;
+}
+
+.about-text {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  text-align: left; /* Left-align text for better readability */
+  margin-top: 2rem;
+}
+
+.about-text h3 {
+  font-size: 2rem;
+  color: #F5E290;
+  margin-top: 1.5rem;
+}
+
+.about-text p {
+  font-size: 1.25rem;
+  line-height: 1.75;
+  color: #ffffff;
+  margin-top: 1rem;
+}
+
+#myBtn {
+  display: fixed; /* Hidden by default */
+  position: fixed; /* Fixed/sticky position */
+  bottom: 20px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  border: none; /* Remove borders */
+  outline: none; /* Remove outline */
+  background-color: #F5E290; /* Set a background color */
+  color: #12394A; /* Text color */
+  cursor: pointer; /* Add a mouse pointer on hover */
+  padding: 15px; /* Some padding */
+  border-radius: 10px; /* Rounded corners */
+  font-size: 18px; /* Increase font size */
+}
+
+
+
+#myBtn:hover {
+  background-color: #555; /* Add a dark-grey background on hover */
+}
+
+@media (min-width: 768px) {
+  .main-content {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .content-wrapper {
+    max-width: 50%;
+  }
+
+  .headline {
+    margin-bottom: 1.5rem;
+  }
+
+  .title {
+    font-size: 4vw;
+  }
+
+  .subtitle {
+    font-size: 2vw;
+  }
+
+  .description {
+    font-size: 1vw;
+  }
+
+  .image-container {
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 767px) {
+  .topnavbar {
+    width: 100%;
+    align-items: center;
+  }
+
+  .login-signup {
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .navigation {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .nav-item {
+    margin: 0.5rem;
+  }
+
+  .content-wrapper {
+    max-width: 100%;
+  }
+
+  .image-container {
+    max-width: 100%;
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-img {
+    width: 7rem;
+  }
+
+  .login-button, .signup-button {
+    width: 6rem;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+  }
+
+  .description {
+    font-size: 0.875rem;
+  }
+
+  .carousel-icon {
+    width: 80px;
+    height: 80px;
+    margin-right: 1rem;
+  }
+
+  .feature-icon {
+    width: 80px;
+    height: 80px;
+  }
+}

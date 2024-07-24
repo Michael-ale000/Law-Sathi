@@ -122,7 +122,7 @@ def laywersignup3(request):
 
                     request.session.flush()
                     messages.success(request,'Form Submiteed Sucessfully. Wait For Conformation Mail.')
-                    return redirect('lawyerlogin')
+                    return redirect('login')
     
         documents_form = LawyerDocumentsForm(prefix='form5')
         context = {'documents_form': documents_form}

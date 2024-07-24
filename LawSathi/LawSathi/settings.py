@@ -42,12 +42,15 @@ INSTALLED_APPS = [
     "LawyerRecommendation",
     "VideoConsultation",
     'social_django', #for gmail login
+    'rest_framework',
+    'corsheaders',
     
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -55,6 +58,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',#exception handeling of social login
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True  # Update as needed for production
 
 ROOT_URLCONF = 'LawSathi.urls'
 

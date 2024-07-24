@@ -100,9 +100,6 @@ def user_login(request):
                         else:
                             messages.error(request,'Form Is Not Accepted. Wait For Conformation Mail.')
                             return render(request,'login.html')
-                    # messages.error(request, 'You Are Lawyer. Login As A Lawayer')
-                    # url = reverse('lawyerlogin')
-                    # return redirect(url)
                 except LawyerDetails.DoesNotExist:
                     login(request,user)
                     messages.success(request, 'Login Successful.')
@@ -119,5 +116,17 @@ def logout(request):
         logout(request)
         messages.success(request,"Loged Out.")
         return redirect('login')  # Redirect to the home page or any other page
+    except Exception as e:
+        return HttpResponse(f"Error Occurred: {e}")
+
+def index(request):
+    try:
+        return render(request,'index.html')
+    except Exception as e:
+        return HttpResponse(f"Error Occurred: {e}")
+    
+def choose(request):
+    try:
+        return render(request,'choose.html')
     except Exception as e:
         return HttpResponse(f"Error Occurred: {e}")
