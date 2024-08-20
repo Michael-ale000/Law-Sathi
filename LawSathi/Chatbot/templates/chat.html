@@ -155,6 +155,22 @@
     }
 }
 
+/* Style for the report button */
+.report-button {
+    background-color: #ff5722;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.report-button:hover {
+    background-color: #e64a19;
+}
 
 </style>
 
@@ -168,7 +184,8 @@
         <!-- Initial bot message -->
         <div class="message bot-message">
             <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Bot Icon">
-            <div>You can ask anything related to the law of Nepal.</div>
+            <div>You can ask anything related to the law of Nepal. If you are not satisfied with our responses you can report your query and we will work on it to provide best result on it form our side.
+            </div>
         </div>
         <!-- Messages will be appended here -->
     </div>
@@ -198,6 +215,7 @@
                 <div class="message user-message">
                     <img src="https://www.w3schools.com/howto/img_avatar.png" alt="User Icon">
                     <div>${message}</div>
+                    <button class="report-button">Report</button>
                 </div>`;
             userInput.value = '';
 
@@ -281,7 +299,38 @@
                 sendButton.click();
             }
         });
+
+        // Handle report button click
+chatBox.addEventListener('click', async (event) => {
+        if (event.target.classList.contains('report-button')) {
+            const messageDiv = event.target.closest('.message');
+            const messageContent = messageDiv.querySelector('div').textContent;
+            const isUserMessage = messageDiv.classList.contains('user-message');
+            const botResponse = messageDiv.nextElementSibling?.querySelector('div')?.textContent || '';
+
+            try {
+                await fetch('/report/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        // user_query: 'test query',
+                        // bot_response: 'test response',
+                        user_query: isUserMessage ? messageContent : '',
+                        bot_response: botResponse  ,
+                    }),
+                });
+                alert('Report submitted successfully.');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to submit the report.');
+            }
+        }
     });
+    });
+
+    
 </script>
 
 {%endblock script%}

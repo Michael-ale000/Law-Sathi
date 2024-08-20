@@ -16,6 +16,7 @@ import asyncio
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from dotenv import load_dotenv
+from .models import UnknownQuerys
 
 # Create your views here.
 load_dotenv()
@@ -66,10 +67,35 @@ async def chat_view(request):
         # Call the asynchronous function properly with await
         res = await chain.ainvoke(user_input)
         answer = res["answer"]
-        # print(answer)
-        response = answer
         return JsonResponse({'response': answer})
     return render(request, 'chat.html')
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def report(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_query = data.get('user_query')
+            bot_response = data.get('bot_response')
+
+            # Save to the unknown query model or any other appropriate model
+            UnknownQuerys.objects.create(user_query=user_query, bot_responses=bot_response)
+
+            return JsonResponse({'status': 'success'})
+        except json.JSONDecodeError:
+            print('Invalid JSON')
+            return JsonResponse({'status': 'fail', 'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            print(f'Error: {e}')
+            return JsonResponse({'status': 'fail', 'error': str(e)}, status=500)
+
+    print('Invalid Request Method')
+    return JsonResponse({'status': 'fail', 'error': 'Invalid request method'}, status=400)
+
 
 @csrf_exempt
 async def temp_view(request):

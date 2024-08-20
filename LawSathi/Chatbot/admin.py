@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FileUpload
+from .models import FileUploads,UnknownQuerys
 import os,PyPDF2
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -52,4 +52,17 @@ class FileUploadAdmin(admin.ModelAdmin):
         embeddings = OllamaEmbeddings(model="nomic-embed-text")
         docsearch = Chroma.from_texts(texts, embeddings, metadatas=metadatas, persist_directory=CHROMA_DB_PATH)
 
-admin.site.register(FileUpload,FileUploadAdmin)
+admin.site.register(FileUploads,FileUploadAdmin)
+
+
+# for handeling unknown query
+@admin.register(UnknownQuerys)
+class UnknownQueryAdmin(admin.ModelAdmin):
+    list_display = ('user_query', 'bot_responses', 'bot_querytimestamp', 'handled')  # Fix spacing and add missing comma
+    list_filter = ('handled',)
+
+    actions = ['mark_as_handled']
+
+    def mark_as_handled(self, request, queryset):
+        queryset.update(handled=True)
+    mark_as_handled.short_description = "Mark selected queries as handled"
