@@ -86,6 +86,9 @@ def user_login(request):
             password = request.POST.get('password')
             user = authenticate(request,username=username,password=password)
             if user is not None:
+                if user.is_staff:
+                    login(request,user)
+                    return redirect(reverse('admin:index'))
                 try:
                     status_check = LawyerDetails.objects.get(user=user)
                     lawyer_check = LawyerDetails.objects.get(user=user)

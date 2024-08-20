@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.html import strip_tags
 from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 # Create your laywer models here.
 
@@ -124,3 +125,7 @@ def accept_or_reject_email(sender, instance, created, **kwargs):
         from_email = 'your_email@gmail.com'  # Sender email address
         to_email = instance.user.email  # Lawyer's email address
         send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
+
+# defining models form pdf to be uplaoded by admin 
+
+

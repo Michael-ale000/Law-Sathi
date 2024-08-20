@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'social_django', #for gmail login
     'rest_framework',
     'corsheaders',
+    'django_extensions',
     
 ]
 
@@ -166,7 +167,7 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL= 'newsportal'
 LOGOUT_URL = 'logout'
-LOGOUT_REDIRECT_URL= 'userlogin' 
+LOGOUT_REDIRECT_URL= 'login' 
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('GOOGLE_CLIENT_ID') #'<your-client-id>'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('GOOGLE_SECRET_KEY')#<your-client-secret>'

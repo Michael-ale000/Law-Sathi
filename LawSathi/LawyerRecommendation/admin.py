@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Address, LawyerDetails, LawyerDocuments
 
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('location', 'district', 'province')
+    list_display = ('user', 'location', 'district', 'province')
 
 admin.site.register(Address, AddressAdmin)
 
@@ -12,6 +12,7 @@ class LawyerDetailsAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'bar_license')
     actions = ['approve_lawyers', 'reject_lawyers']
 
+    
     def approve_lawyers(self, request, queryset):
         queryset.update(status='approved')
 
