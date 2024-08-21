@@ -1,0 +1,102 @@
+<h1>Site Administration</h1>
+<div style="width: 90%; margin: auto;">
+    <h2>Custom Dashboard</h2>
+    <canvas id="userStatsChart"></canvas>
+    <canvas id="addressStatsChart"></canvas>
+    <canvas id="lawyerStatusChart"></canvas>
+    <canvas id="queryStatsChart"></canvas>
+    <canvas id="fileStatsChart"></canvas>
+</div>
+
+!-- Include Chart.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+        fetch("{% url 'dashboard_data' %}")
+            .then(response => response.json())
+            .then(data => {
+                const chartData = {
+                    user_stats: {
+                        labels: ['Total Users'],
+                        values: [data.user_count]
+                    },
+                    address_stats: {
+                        labels: ['Total Addresses'],
+                        values: [data.address_count]
+                    },
+                    lawyer_status: {
+                        labels: data.lawyer_statuses.map(status => status.status),
+                        values: data.lawyer_statuses.map(status => status.count)
+                    },
+                    query_stats: {
+                        labels: ['Handled Queries', 'Unhandled Queries'],
+                        values: [data.handled_queries_count, data.unhandled_queries_count]
+                    },
+                    file_stats: {
+                        labels: ['Total Files'],
+                        values: [data.file_count]
+                    }
+                };
+
+                function createChart(ctx, type, labels, data) {
+                    new Chart(ctx, {
+                        type: type,
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Statistics',
+                                data: data,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+
+                createChart(
+                    document.getElementById('userStatsChart').getContext('2d'),
+                    'bar',
+                    chartData.user_stats.labels,
+                    chartData.user_stats.values
+                );
+
+                createChart(
+                    document.getElementById('addressStatsChart').getContext('2d'),
+                    'bar',
+                    chartData.address_stats.labels,
+                    chartData.address_stats.values
+                );
+
+                createChart(
+                    document.getElementById('lawyerStatusChart').getContext('2d'),
+                    'pie',
+                    chartData.lawyer_status.labels,
+                    chartData.lawyer_status.values
+                );
+
+                createChart(
+                    document.getElementById('queryStatsChart').getContext('2d'),
+                    'pie',
+                    chartData.query_stats.labels,
+                    chartData.query_stats.values
+                );
+
+                createChart(
+                    document.getElementById('fileStatsChart').getContext('2d'),
+                    'bar',
+                    chartData.file_stats.labels,
+                    chartData.file_stats.values
+                );
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    });
+</script>

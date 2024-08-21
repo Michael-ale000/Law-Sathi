@@ -21,13 +21,17 @@
         <img src="{% static 'lawsathi.png' %}" alt="logo" class="logo">
         <div class="headerItems">
             <div class="navitem">
-                <i class="fas fa-comment"></i>
-            </div>    
-            <div class="navitem">
-                <i class="fas fa-bell loading-screen-other-icons"></i>
+              <div class = 'top-right-user-icon' onclick="toggleUserDetails()">
+                <img src="{% static 'user.jpg' %}" alt="User Icon" class="user-icon">
+              </div>
+              <div id="user-details" class="user-details hidden">
+                <p><strong>Username:</strong> <span class="user-detail">{{ request.user.username }}</span></p>
+    <p><strong>Email:</strong> <span class="user-detail">{{ request.user.email }}</span></p>
+    <p><strong>Phone Number:</strong> <span class="user-detail">{{ request.user.moreuserinfo.phone_number }}</span></p>
+    <p><strong>Gender:</strong> <span class="user-detail">{{ request.user.moreuserinfo.gender }}</span></p>
+    <p><strong>Date of Birth:</strong> <span class="user-detail">{{ request.user.moreuserinfo.dob }}</span></p>
             </div>
-            <div class="navitem">
-                <i class="fas fa-user-circle loading-screen-other-icons" style="font-size: 40px"></i>
+
             </div>
         </div>
     </div>
@@ -70,7 +74,7 @@
                 <span class="tooltip">Conference</span>
               </li>
               <li>
-                <a href="">
+                <a href="{% url 'settings' %}">
                   <i class="bx bx-cog"></i>
                   <span class="links_name">Settings</span>
                 </a>
@@ -100,6 +104,21 @@
 </div>
 {% block script %}{% endblock script %}
 <script src="{% static 'script.js' %}"></script>
+<script>
+  function toggleUserDetails() {
+      const details = document.getElementById('user-details');
+      details.classList.toggle('visible');
+  }
+
+  // Close the user details if clicking outside the dropdown
+  document.addEventListener('click', function(event) {
+      const details = document.getElementById('user-details');
+      const icon = document.querySelector('.top-right-user-icon img');
+      if (!details.contains(event.target) && !icon.contains(event.target)) {
+          details.classList.remove('visible');
+      }
+  });
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     {% if messages %}

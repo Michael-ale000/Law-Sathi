@@ -31,16 +31,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "Chatbot",
+    "NewsPortal",
+    "LawyerRecommendation",
+    "VideoConsultation",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "Chatbot",
-    "NewsPortal",
-    "LawyerRecommendation",
-    "VideoConsultation",
     'social_django', #for gmail login
     'rest_framework',
     'corsheaders',
@@ -165,7 +165,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL= 'newsportal'
+LOGIN_REDIRECT_URL= 'user_landingpage'
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL= 'login' 
 

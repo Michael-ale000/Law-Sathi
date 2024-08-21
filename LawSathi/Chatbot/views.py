@@ -16,11 +16,18 @@ import asyncio
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from dotenv import load_dotenv
+from .models import UnknownQuerys,FileUploads
+from LawyerRecommendation.models import  Address, LawyerDetails
+from NewsPortal.models import MoreUserInfo
+from django.db.models import Count, Avg
+from django.http import JsonResponse
+from django.contrib.auth.models import User
 
 # Create your views here.
 load_dotenv()
 
 groq_api_key = os.environ['GROQ_API_KEY']
+# llm_groq = ChatGroq(groq_api_key=groq_api_key, model_name="llama3.1-70b-versatile", temperature=2)
 llm_groq = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-70b-8192", temperature=2)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -66,10 +73,70 @@ async def chat_view(request):
         # Call the asynchronous function properly with await
         res = await chain.ainvoke(user_input)
         answer = res["answer"]
-        # print(answer)
-        response = answer
         return JsonResponse({'response': answer})
     return render(request, 'chat.html')
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def report(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_query = data.get('user_query')
+            bot_response = data.get('bot_response')
+
+            # Save to the unknown query model or any other appropriate model
+            UnknownQuerys.objects.create(user_query=user_query, bot_responses=bot_response)
+
+            return JsonResponse({'status': 'success'})
+        except json.JSONDecodeError:
+            print('Invalid JSON')
+            return JsonResponse({'status': 'fail', 'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            print(f'Error: {e}')
+            return JsonResponse({'status': 'fail', 'error': str(e)}, status=500)
+
+    print('Invalid Request Method')
+    return JsonResponse({'status': 'fail', 'error': 'Invalid request method'}, status=400)
+
+def dashboard_data(request):
+     # General Users: Users with MoreUserInfo but not lawyers
+    general_users_count = MoreUserInfo.objects.filter(user__lawyerdetails__isnull=True).count()
+    
+    # Lawyers: Users with both MoreUserInfo and LawyerDetails
+    lawyers_count = LawyerDetails.objects.count()
+
+    # Staff: Users who are staff
+    staff_count = User.objects.filter(is_staff=True).count()
+
+    # Superusers: Users who are superusers
+    superusers_count = User.objects.filter(is_superuser=True).count()
+    
+    # Total Users: All users
+    total_users_count = User.objects.count()
+
+    lawyers_by_province = LawyerDetails.objects.select_related('user__address').values('user__address__province').annotate(count=Count('user__address__province'))
+    lawyer_statuses = list(LawyerDetails.objects.values('status').annotate(count=Count('status')))
+    handled_queries_count = UnknownQuerys.objects.filter(handled=True).count()
+    unhandled_queries_count = UnknownQuerys.objects.filter(handled=False).count()
+    file_count = FileUploads.objects.count()
+
+    data = {
+        'general_users_count': general_users_count,
+        'lawyers_count': lawyers_count,
+        'staff_count': staff_count,
+        'superusers_count': superusers_count,
+        'total_users_count': total_users_count,
+        'lawyers_by_province': list(lawyers_by_province),
+        'lawyer_statuses': lawyer_statuses,
+        'handled_queries_count': handled_queries_count,
+        'unhandled_queries_count': unhandled_queries_count,
+        'file_count': file_count,
+    }
+    return JsonResponse(data)
 
 @csrf_exempt
 async def temp_view(request):

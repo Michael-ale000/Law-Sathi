@@ -1,0 +1,21 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% block title %} LawSathi Admin{% endblock %}
+
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static 'custom_admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div id="branding">
+    <h1 id="site-name" style="display: flex; align-items: center;">
+        <img src="{% static 'lawsathi.png' %}" alt="My Logo" style="width: 150px; height: auto; margin-right: 10px;" />
+        <a href="{% url 'admin:index' %}" style="color: #FFD700;">LawSathi Admin</a>
+    </h1>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
