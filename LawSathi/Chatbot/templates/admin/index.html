@@ -1,0 +1,194 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <h2>Custom Dashboard</h2>
+        <div class="charts-wrapper">
+            <div class="chart-container">
+                <canvas id="userStatsChart"></canvas>
+                <p>User Types</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="lawyersByProvinceChart"></canvas>
+                <p>Lawyers by Province</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="lawyerStatusChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="queryStatsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="fileStatsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+   
+    <style>
+        .dashboard-container {
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .charts-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .chart-container {
+            width: 300px;
+            height: 200px;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch("{% url 'dashboard_data' %}")
+            .then(response => response.json())
+            .then(data => {
+                const chartData = {
+                    user_stats: {
+                        labels: ['General Users', 'Lawyers', 'Staff', 'Superusers', 'Total Users'],
+                        values: [
+                            data.general_users_count,
+                            data.lawyers_count,
+                            data.staff_count,
+                            data.superusers_count,
+                            data.total_users_count
+                        ]
+                    },
+                    lawyers_by_province: {
+                        labels: data.lawyers_by_province.map(lawyer => lawyer['user__address__province']),
+                        values: data.lawyers_by_province.map(lawyer => lawyer.count)
+                    },
+                    lawyer_status: {
+                        labels: data.lawyer_statuses.map(status => status.status),
+                        values: data.lawyer_statuses.map(status => status.count)
+                    },
+                    query_stats: {
+                        labels: ['Handled Queries', 'Unhandled Queries'],
+                        values: [data.handled_queries_count, data.unhandled_queries_count]
+                    },
+                    file_stats: {
+                        labels: ['Total Files'],
+                        values: [data.file_count]
+                    }
+                };
+
+                function createChart(ctx, type, labels, data) {
+                    new Chart(ctx, {
+                        type: type,
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Statistics',
+                                data: data,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            if (context.parsed.y !== null) {
+                                                label += context.parsed.y + ' ' + context.dataset.label;
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+
+                createChart(
+                    document.getElementById('userStatsChart').getContext('2d'),
+                    'bar',
+                    chartData.user_stats.labels,
+                    chartData.user_stats.values
+                );
+
+                createChart(
+                    document.getElementById('lawyersByProvinceChart').getContext('2d'),
+                    'bar',
+                    chartData.lawyers_by_province.labels,
+                    chartData.lawyers_by_province.values
+                );
+
+                createChart(
+                    document.getElementById('lawyerStatusChart').getContext('2d'),
+                    'pie',
+                    chartData.lawyer_status.labels,
+                    chartData.lawyer_status.values
+                );
+
+                createChart(
+                    document.getElementById('queryStatsChart').getContext('2d'),
+                    'pie',
+                    chartData.query_stats.labels,
+                    chartData.query_stats.values
+                );
+
+                createChart(
+                    document.getElementById('fileStatsChart').getContext('2d'),
+                    'bar',
+                    chartData.file_stats.labels,
+                    chartData.file_stats.values
+                );
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    });
+</script>
+
+{% endblock %}

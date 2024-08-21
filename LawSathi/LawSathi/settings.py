@@ -165,7 +165,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL= 'newsportal'
+LOGIN_REDIRECT_URL= 'user_landingpage'
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL= 'login' 
 

@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.db import transaction,IntegrityError
 import os,requests
 from dotenv import load_dotenv
-from .form import UserSignUpForm,MoreUserInfoForm
+from .form import UserSignUpForm,MoreUserInfoForm,UserUpdateForm,MoreUserInfoUpdateForm
 from .models import MoreUserInfo
 from django.contrib.auth import authenticate,login,logout
 from LawyerRecommendation.models import LawyerDetails
@@ -133,3 +133,30 @@ def choose(request):
         return render(request,'choose.html')
     except Exception as e:
         return HttpResponse(f"Error Occurred: {e}")
+    
+def settings(request):
+    try:
+        if request.method == "POST":
+            user_form = UserUpdateForm(request.POST, instance=request.user)
+            more_user_info_form = MoreUserInfoUpdateForm(request.POST, instance=request.user.moreuserinfo)
+            if user_form.is_valid() and more_user_info_form.is_valid():
+                user_form.save()
+                more_user_info_form.save()
+                messages.success(request, 'Your profile has been updated!')
+                return redirect('settings') 
+            else:
+            # If form is not valid, add form errors to messages
+                for field, errors in UserUpdateForm.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}') 
+        
+        else:
+            user_form = UserUpdateForm(instance=request.user)
+            more_user_info_form = MoreUserInfoUpdateForm(instance=request.user.moreuserinfo)
+
+        context = {
+        'user_form': user_form,
+        'more_user_info_form': more_user_info_form,}
+        return render(request,'settings.html',context)
+    except Exception as e:
+        return HttpResponse(f"Error Occurred:{e}")

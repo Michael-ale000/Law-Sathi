@@ -288,3 +288,80 @@
 .button3{
   margin-right: 200px;
 }
+
+.top-right-user-icon {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.user-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.user-icon:hover {
+  transform: scale(1.1);
+}
+
+.user-details {
+  position: fixed;
+  top: 60px;
+  right: 15px;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 1000;
+  min-width: 250px;
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+.user-details.visible {
+  display: block;
+}
+
+.user-details p {
+  margin: 10px 0;
+}
+
+.user-details strong {
+  color: #4a90e2;
+  font-size: 14px;
+}
+
+.user-detail {
+  color: #333333;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.user-details p:hover .user-detail {
+  color: #4a90e2;
+}
+
+.user-details::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent #ffffff transparent;
+}
+
+@media (max-width: 768px) {
+  .user-details {
+      right: 10px;
+      left: 10px;
+      top: 70px;
+  }
+
+}

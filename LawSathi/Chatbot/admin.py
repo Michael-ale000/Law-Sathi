@@ -1,9 +1,12 @@
 from django.contrib import admin
+from django.core.handlers.wsgi import WSGIRequest
 from .models import FileUploads,UnknownQuerys
 import os,PyPDF2
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
+from django.template.response import TemplateResponse
+
 
 # Register your models here.
 
@@ -66,3 +69,8 @@ class UnknownQueryAdmin(admin.ModelAdmin):
     def mark_as_handled(self, request, queryset):
         queryset.update(handled=True)
     mark_as_handled.short_description = "Mark selected queries as handled"
+
+
+
+
+        

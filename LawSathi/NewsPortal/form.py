@@ -117,3 +117,12 @@ class MoreUserInfoForm(forms.ModelForm):
         fields = ['phone_number','gender','dob']
 
         
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','email']
+
+class MoreUserInfoUpdateForm(forms.ModelForm):
+    class Meta:
+        model = MoreUserInfo
+        fields = ['phone_number','gender','dob']
