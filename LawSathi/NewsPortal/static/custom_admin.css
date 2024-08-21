@@ -1,0 +1,38 @@
+/* Change the background color of the navbar */
+.navbar {
+    background-color: #022534; /* Dark blue-gray color */
+}
+
+/* Change the background color of the body */
+body {
+    background-color:  #12394a; /* Dark gray color */
+}
+
+/* Optional: Change the color of the text in the navbar */
+.navbar .navbar-brand,
+.navbar .navbar-nav > li > a {
+    color: #ecf0f1; /* Light gray color for text */
+}
+
+/* Optional: Change the color of the main content text */
+body, .module h2, .grp-module h2, #branding a {
+    color: #ecf0f1; /* Light gray color for text */
+}
+
+/* Ensure the branding section matches the navbar */
+#branding {
+    padding: 10px;
+}
+
+
+/* for side navbar */
+/* Change the background color of the side navbar */
+#content-main {
+    background-color: #12394a; /* Dark gray for the main content area */
+}
+
+#nav-sidebar {
+    background-color: #022534; /* Dark blue-gray for the sidebar */
+    border-right: 1px solid #2c3e50; /* Optional: border to match the navbar */
+}
+
