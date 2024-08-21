@@ -7,6 +7,7 @@ urlpatterns=[
     path('lawyerlanding/',views.lawyerlanding,name='lawyerlanding'),
     path('logout/',views.logout,name='logout'),
     path('test',views.test,name='test'),
+    path('lawyersearch', views.lawyersearch, name='lawyersearch'),
     # path('lawyerlogin/',views.lawyer_login,name='lawyerlogin'),
    
 ]

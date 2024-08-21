@@ -46,9 +46,9 @@
             <br>
             <button type="submit" class="button">Create Account</button>
             <div class="additional-options">
-                <p>Already have an account? <a href="#">Login</a></p>
+                <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
                 <div class="separator">or</div>
-                <button type="button" class="google-button"><a href="#">Sign up with Google</a></button>
+                <button type="button" class="google-button"><a href="{% url 'choose' %}">Sign up with Google</a></button>
             </div>
         </form>
     </div>

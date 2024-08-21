@@ -4,12 +4,14 @@ from .form import UserSignUpForm,MoreUserInfoForm,AddressForm,LawyerDetailsForm,
 from django.db import transaction,IntegrityError
 from NewsPortal.models import MoreUserInfo
 from django.contrib.auth.models import User
-from .models import Address,LawyerDetails,LawyerDocuments
+from .models import Address,LawyerDetails,LawyerDocuments,Lawyerdataset
 from datetime import date
 from django.contrib.auth import authenticate,login
 from django.contrib import messages
 from django.urls import reverse
-
+from django.db.models import Q
+from itertools import chain
+from django.conf import settings
 
 # Create your views here.
 def serialize_date(obj):
@@ -132,6 +134,66 @@ def laywersignup3(request):
         return HttpResponse(f"Error Occurred: {e}")
 
          
+def lawyersearch(request):
+    # Start with all LawyerDetails
+    lawyer_details = LawyerDetails.objects.filter(status='approved')
+    other_lawyers = Lawyerdataset.objects.all()
+    # Apply search bar filter
+    if 'search' in request.GET:
+        search_query = request.GET['search']
+        lawyer_details = lawyer_details.filter(
+            Q(user__username__icontains=search_query) |
+            Q(user__first_name__icontains=search_query) |
+            Q(user__last_name__icontains=search_query)
+        )
+        other_lawyers = other_lawyers.filter(
+            Q(name__icontains=search_query)  # Adjust this according to the fields in OtherLawyerModel
+        )
+
+    # Filter by Experience
+    if 'experience' in request.GET:
+        experience_ranges = request.GET.getlist('experience')
+        experience_q = Q()
+        for range_str in experience_ranges:
+            if '-' in range_str:  # For ranges like "0-5"
+                min_exp, max_exp = map(int, range_str.split('-'))
+                experience_q |= Q(experience__gte=min_exp, experience__lte=max_exp)
+            elif '+' in range_str:  # For "25+"
+                min_exp = int(range_str.rstrip('+'))
+                experience_q |= Q(experience__gte=min_exp)
+        
+        lawyer_details = lawyer_details.filter(experience_q)
+        other_lawyers = other_lawyers.filter(experience_q)
+
+    # Filter by Case Completion Days
+    if 'average_case_completion_days' in request.GET:
+        completion_days_ranges = request.GET.getlist('average_case_completion_days')
+        completion_q = Q()
+        for days_str in completion_days_ranges:
+            if days_str == '5':
+                completion_q |= Q(average_case_completion_days__lt=30)
+            elif days_str == '10':
+                completion_q |= Q(average_case_completion_days__gte=30, average_case_completion_days__lte=60)
+            elif days_str == '15':
+                completion_q |= Q(average_case_completion_days__gte=60, average_case_completion_days__lte=90)
+            elif days_str == '20':
+                completion_q |= Q(average_case_completion_days__gte=90, average_case_completion_days__lte=120)
+            elif days_str == '25':
+                completion_q |= Q(average_case_completion_days__gte=120)
+
+        lawyer_details = lawyer_details.filter(completion_q)
+        other_lawyers = other_lawyers.filter(experience_q)
+
+    if 'location' in request.GET:
+        provinces = request.GET.getlist('location')  # Get a list of selected locations
+        if provinces:
+            lawyer_details = lawyer_details.filter(office_address__province__in=provinces)
+            other_lawyers = other_lawyers.filter(province__in=provinces)
+
+    combined_lawyers = list(chain(lawyer_details, other_lawyers))
+    combined_lawyers.sort(key=lambda x: getattr(x, 'rating', getattr(x, 'Rating', 0)), reverse=True)
+    
+    return render(request, 'lawyersearch.html', {'lawyer_details': combined_lawyers,'MEDIA_URL': settings.MEDIA_URL })
 
 
 def lawyerlanding(request):

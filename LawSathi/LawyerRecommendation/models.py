@@ -106,7 +106,21 @@ class LawyerDocuments(models.Model):
 
     def __str__(self):
         return f"Dcouments of {self.user.username}"
-    
+
+class Lawyerdataset(models.Model):
+    name = models.CharField(max_length=255)
+    experience = models.IntegerField()
+    average_case_completion_days = models.IntegerField()
+    bar_license = models.CharField(max_length=255)
+    rating = models.IntegerField()
+    province = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'lawyerrecommendation_lawyerdataset'
+        
+    def __str__(self):
+        return self.name
+
 @receiver(post_save, sender=LawyerDetails)
 def accept_or_reject_email(sender, instance, created, **kwargs):
     # print(instance.user)

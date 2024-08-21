@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Address, LawyerDetails, LawyerDocuments
+from .models import Address, LawyerDetails, LawyerDocuments, Lawyerdataset
 
 class AddressAdmin(admin.ModelAdmin):
     list_display = ('user', 'location', 'district', 'province')
@@ -25,3 +25,8 @@ class LawyerDocumentsAdmin(admin.ModelAdmin):
     list_display = ('user', 'license_certificate', 'citizenship_document', 'personal_photos')
 
 admin.site.register(LawyerDocuments, LawyerDocumentsAdmin)
+
+class LawyerdatasetAdmin(admin.ModelAdmin):
+    list_display = ('name', 'experiece', 'average_case_completion_days', 'bar_license','rating', 'province')
+
+admin.site.register(Lawyerdataset)

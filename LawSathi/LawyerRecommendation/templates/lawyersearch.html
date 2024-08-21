@@ -1,0 +1,157 @@
+{% extends "user_base.html" %}
+{% load static %}
+{% block title %}
+    <title>Lawyer Search</title>
+    <link rel="stylesheet" href="{% static 'lawyer-search.css' %}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block content %}
+<form method="GET" action="{% url 'lawyersearch' %}">
+<div class="search-container">
+      <div class="search-bar-wrapper">
+    <input type="text" class="search-bar" name="search" placeholder="Search for lawyers">
+    <button type="submit" class="search-button">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 18a8 8 0 100-16 8 8 0 000 16zm6.4-1.4l5.6 5.6" />
+        </svg>
+    </button>
+</div>
+<div class="filters">
+        <div class="dropdown">
+    <button class="dropbtn" data-toggle="dropdown">Province</button>
+    <div class="dropdown-content">
+        <div class="filter-options">
+            <label><input type="checkbox" name="location" value="Koshi"> Koshi</label>
+            <label><input type="checkbox" name="location" value="Madhesh"> Madhesh</label>
+            <label><input type="checkbox" name="location" value="Bagmati"> Bagmati</label>
+            <label><input type="checkbox" name="location" value="Gandaki"> Gandaki</label>
+            <label><input type="checkbox" name="location" value="Lumbini"> Lumbini</label>
+            <label><input type="checkbox" name="location" value="Karnali"> Karnali</label>
+            <label><input type="checkbox" name="location" value="Sudurpaschim"> Sudurpaschim</label>
+        </div>
+    </div>
+</div>
+     <div class="dropdown">
+    <button class="dropbtn" data-toggle="dropdown">Experience</button>
+    <div class="dropdown-content">
+        <div class="filter-options">
+            <label><input type="checkbox" name="experience" value="0-5"> 0-5 years</label>
+            <label><input type="checkbox" name="experience" value="5-10"> 5-10 years</label>
+            <label><input type="checkbox" name="experience" value="10-15"> 10-15 years</label>
+            <label><input type="checkbox" name="experience" value="15-20"> 15-20 years</label>
+            <label><input type="checkbox" name="experience" value="25+"> 25+ years</label>
+        </div>
+    </div>
+</div>
+    <div class="dropdown">
+    <button class="dropbtn" data-toggle="dropdown">Case Completion Days</button>
+    <div class="dropdown-content">
+        <div class="filter-options">
+            <label><input type="checkbox" name="average_case_completion_days" value="5"> Less than 30 days</label>
+            <label><input type="checkbox" name="average_case_completion_days" value="10"> 30-60 days</label>
+            <label><input type="checkbox" name="average_case_completion_days" value="15"> 60-90 days</label>
+            <label><input type="checkbox" name="average_case_completion_days" value="20"> 90-120 days</label>
+            <label><input type="checkbox" name="average_case_completion_days" value="25"> 120 days+ </label>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="results">
+    {% if lawyer_details %}
+        {% for lawyer in lawyer_details %}
+            <div class="result-item">
+                <div class="result-photo">
+                    {% if lawyer.user.lawyerdocuments.personal_photos %}
+                        <img src="{{ lawyer.user.lawyerdocuments.personal_photos.url }}" alt="{{ lawyer.user.username }}">
+                    {% else %}
+         <img src="{{ MEDIA_URL }}documents/personal_photos/default.png" alt="No photo available">  <!-- Default photo if none exists -->
+    {% endif %}
+                </div>
+                <div class="result-info">
+                    <div class="result-rating">
+                        {% if lawyer.rating %}
+                            {{ lawyer.rating }} ★
+                        {% elif lawyer.Rating %}
+                            {{ lawyer.Rating }} ★
+                        {% else %}
+                            No rating available
+                        {% endif %}
+                    </div>
+                    {% if lawyer.user %}
+                        <h3>{{ lawyer.user.first_name }} {{ lawyer.user.last_name }}</h3>
+                    {% else %}
+                        <h3>{{ lawyer.name }}</h3>
+                    {% endif %}
+                    <!-- <h3>{{ lawyer.user.first_name }}
+        {% if lawyer.user.userprofile.middle_name %}
+            {{ lawyer.user.userprofile.middle_name }}
+        {% endif %}
+        {{ lawyer.user.last_name }}</h3> -->
+                    <p>{{ lawyer.user.profile.short_bio }}</p>
+                    <div class="result-buttons">
+                        <button class="profile-btn">View Profile</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-results">No results found</p>
+    {% endif %}
+</div>
+
+
+
+
+
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.select-all').forEach(selectAllLink => {
+        selectAllLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const filterOptions = e.target.closest('.dropdown-content').querySelectorAll('.filter-options input[type="checkbox"]');
+            filterOptions.forEach(checkbox => checkbox.checked = true);
+        });
+    });
+    document.querySelectorAll('.reset').forEach(resetLink => {
+        resetLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const filterOptions = e.target.closest('.dropdown-content').querySelectorAll('.filter-options input[type="checkbox"]');
+            filterOptions.forEach(checkbox => checkbox.checked = false);
+        });
+    });
+});
+</script> -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.dropbtn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const dropdownContent = this.nextElementSibling;
+            const isVisible = dropdownContent.classList.contains('show');
+
+            // Hide any other open dropdowns
+            document.querySelectorAll('.dropdown-content').forEach(content => {
+                content.classList.remove('show');
+            });
+
+            // Toggle visibility
+            if (!isVisible) {
+                dropdownContent.classList.add('show');
+            }
+        });
+    });
+
+    // Close dropdowns if clicking outside of them
+    window.addEventListener('click', function(e) {
+        if (!e.target.matches('.dropbtn')) {
+            document.querySelectorAll('.dropdown-content').forEach(content => {
+                content.classList.remove('show');
+            });
+        }
+    });
+});
+</script>
+{% endblock  %}
