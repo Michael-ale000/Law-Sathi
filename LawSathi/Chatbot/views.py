@@ -20,8 +20,10 @@ from .models import UnknownQuerys,FileUploads
 from LawyerRecommendation.models import  Address, LawyerDetails
 from NewsPortal.models import MoreUserInfo
 from django.db.models import Count, Avg
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 load_dotenv()
@@ -58,27 +60,30 @@ def initialize_chain():
 # Handle form submission
 @csrf_exempt
 async def chat_view(request):
-    response = ""
     if request.method == 'POST':
-         # Parse JSON request body
+        # Parse JSON request body
         data = json.loads(request.body)
         user_input = data.get('user_input', '')
-        # print(user_input)
 
         # Check if user_input is empty or None
         if not user_input:
             return JsonResponse({'response': 'No input provided'}, status=400)
+
         chain = initialize_chain()
-        # cb = cl.AsyncLangchainCallbackHandler()
+
         # Call the asynchronous function properly with await
         res = await chain.ainvoke(user_input)
         answer = res["answer"]
-        return JsonResponse({'response': answer})
-    return render(request, 'chat.html')
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
+        return JsonResponse({'response': answer})
+
+    elif request.method == 'GET':
+        # Asynchronous context: manually render template synchronously
+        html = render_to_string('chat.html')
+        return HttpResponse(html)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 @csrf_exempt
 def report(request):
