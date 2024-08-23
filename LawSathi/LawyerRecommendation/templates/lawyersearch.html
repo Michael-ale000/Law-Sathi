@@ -57,6 +57,8 @@
     </div>
 </div>
 </div>
+</div>
+</form>
 
 <div class="results">
     {% if lawyer_details %}
@@ -91,7 +93,11 @@
         {{ lawyer.user.last_name }}</h3> -->
                     <p>{{ lawyer.user.profile.short_bio }}</p>
                     <div class="result-buttons">
-                        <button class="profile-btn">View Profile</button>
+                        {% if lawyer.get_model_name == 'lawyerdataset' %}
+                        <a href="{% url 'lawyer_profile_detail_dataset' lawyer.id %}" ><button class="profile-btn">View Profile</button></a>
+                        {% elif  lawyer.get_model_name == 'lawyerdetails'  %}
+                        <a href="{% url 'lawyer_profile_detail_details' lawyer.user_id %}"><button class="profile-btn">View Profile</button></a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

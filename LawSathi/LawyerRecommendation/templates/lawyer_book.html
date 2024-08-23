@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ lawyer.user.username }}'s Profile</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .page-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding-top: 40px;
+        }
+        .content-wrapper {
+            width: 100%;
+            max-width: 800px;
+        }
+        .profile-header {
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            color: #fff;
+            padding: 30px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .profile-header h1 {
+            font-size: 2.5rem;
+        }
+        .profile-header p {
+            font-size: 1.25rem;
+        }
+        .specialization-card, .experience-card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .specialization-card h3, .experience-card h3 {
+            font-size: 1.5rem;
+            color: #343a40;
+        }
+        .booking-form {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .booking-form h2 {
+            font-size: 1.75rem;
+            color: #343a40;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .booking-form button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            width: 100%;
+        }
+        .booking-form button:hover {
+            background-color: #0056b3;
+        }
+        .available-times {
+            margin-top: 20px;
+        }
+        .available-times h3 {
+            font-size: 1.25rem;
+            color: #343a40;
+            margin-bottom: 15px;
+        }
+        .time-slot {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="content-wrapper">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <h1>{{ lawyer.user.username }}'s Profile</h1>
+                <p>Specialization: {{ lawyer.specialization }}</p>
+                <p>Experience: {{ lawyer.experience }} years</p>
+            </div>
+
+            <div class="row">
+                <!-- Specialization Section -->
+                <div class="col-md-6">
+                    <div class="specialization-card">
+                        <h3>Specialization</h3>
+                        <p>{{ lawyer.specialization }}</p>
+                    </div>
+                </div>
+                <!-- Experience Section -->
+                <div class="col-md-6">
+                    <div class="experience-card">
+                        <h3>Experience</h3>
+                        <p>{{ lawyer.experience }} years</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="booking-form">
+                        <h2>Book This Lawyer</h2>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit">Book Now</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

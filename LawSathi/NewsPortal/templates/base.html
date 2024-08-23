@@ -21,7 +21,26 @@
                 <i class="fas fa-comment"></i>
             </div>    
             <div class="navitem">
-                <i class="fas fa-bell loading-screen-other-icons"></i>
+              <div id="notification-container">
+                <div id="notification-button">
+                    <i class="fas fa-bell"></i>
+                    <span id="notification-badge">{{ unread_notifications }}</span>
+                </div>
+                <div id="notification-dropdown">
+                    <ul id="notification-list">
+                        {% for notification in notifications %}
+                            <li>
+                                <strong>{{ notification.lawyer.username }}</strong><br>
+                                Date: {{ notification.date }}<br>
+                                Time: {{ notification.time }}<br>
+                                <a href="{{ notification.meeting_link }}" target="_blank">Meeting Link</a>
+                            </li>
+                        {% empty %}
+                            <li>No new notifications.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
             </div>
             <div class="navitem">
                 <i class="fas fa-user-circle loading-screen-other-icons" style="font-size: 40px"></i>
@@ -82,5 +101,24 @@
 </div>
 {% block script %}{% endblock script %}
 <script src="{% static 'script.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      var notificationButton = document.getElementById('notification-button');
+      var notificationDropdown = document.getElementById('notification-dropdown');
+
+      notificationButton.addEventListener('click', function(event) {
+          event.preventDefault();
+          var isVisible = notificationDropdown.style.display === 'block';
+          notificationDropdown.style.display = isVisible ? 'none' : 'block';
+      });
+
+      document.addEventListener('click', function(event) {
+          if (!notificationButton.contains(event.target) && !notificationDropdown.contains(event.target)) {
+              notificationDropdown.style.display = 'none';
+          }
+      });
+  });
+</script>
+
 </body>
 </html>

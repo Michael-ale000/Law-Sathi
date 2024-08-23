@@ -1,0 +1,90 @@
+
+    /* Container for notification button and dropdown */
+    #notification-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Style for the notification button */
+    #notification-button {
+        cursor: pointer;
+        font-size: 1.5rem; /* Increased size for better visibility */
+        color: #333;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Style for the notification badge */
+    #notification-badge {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background-color: #dc3545; /* Red color for the badge */
+        color: white;
+        border-radius: 50%;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        display: none; /* Default is hidden */
+    }
+
+    /* Make the badge visible if the class is applied */
+    .badge-visible {
+        display: inline-block; /* Show the badge */
+    }
+
+    /* Style for the notification dropdown */
+    #notification-dropdown {
+        display: none;
+        position: absolute;
+        top: 40px; /* Space below the button */
+        right: 0;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 300px; /* Increased width for better readability */
+        z-index: 1000;
+        border-radius: 5px;
+        overflow: hidden;
+        font-size: 0.875rem; /* Adjusted font size */
+    }
+
+    /* Style for the notification list */
+    #notification-dropdown ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Style for each notification item */
+    #notification-dropdown ul li {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        color: #333;
+        word-break: break-word; /* Ensure long links break into multiple lines */
+    }
+
+    /* Remove bottom border for the last item */
+    #notification-dropdown ul li:last-child {
+        border-bottom: none;
+    }
+
+    /* Style for links within the dropdown */
+    #notification-dropdown a {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    /* Hover effect for links */
+    #notification-dropdown a:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        #notification-dropdown {
+            width: 100%;
+            max-width: 400px;
+            right: 0;
+        }
+    }

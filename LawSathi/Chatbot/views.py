@@ -17,13 +17,18 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from dotenv import load_dotenv
 from .models import UnknownQuerys,FileUploads
-from LawyerRecommendation.models import  Address, LawyerDetails
+from LawyerRecommendation.models import  Address, LawyerDetails,Lawyerdataset,Booking
 from NewsPortal.models import MoreUserInfo
 from django.db.models import Count, Avg
 from django.http import JsonResponse,HttpResponse
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse, HttpResponse
+from django.template.loader import render_to_string
+from asgiref.sync import sync_to_async
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 load_dotenv()
@@ -58,6 +63,7 @@ def initialize_chain():
     return chain
 # chain = initialize_chain()
 # Handle form submission
+
 @csrf_exempt
 async def chat_view(request):
     if request.method == 'POST':
@@ -75,14 +81,48 @@ async def chat_view(request):
         res = await chain.ainvoke(user_input)
         answer = res["answer"]
 
+        # Store the conversation in the session
+        conversation = await sync_to_async(request.session.get, thread_sensitive=True)('conversation', [])
+        conversation.append({'user': user_input, 'bot': answer})
+        await sync_to_async(request.session.__setitem__, thread_sensitive=True)('conversation', conversation)
+        await sync_to_async(request.session.save, thread_sensitive=True)()
+
         return JsonResponse({'response': answer})
 
     elif request.method == 'GET':
-        # Asynchronous context: manually render template synchronously
-        html = render_to_string('chat.html')
+        # Load conversation from session
+        conversation = await sync_to_async(request.session.get, thread_sensitive=True)('conversation', [])
+
+        # Render template with conversation
+        html = render_to_string('chat.html', {'conversation': conversation})
         return HttpResponse(html)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+# async def chat_view(request):
+#     if request.method == 'POST':
+#         # Parse JSON request body
+#         data = json.loads(request.body)
+#         user_input = data.get('user_input', '')
+
+#         # Check if user_input is empty or None
+#         if not user_input:
+#             return JsonResponse({'response': 'No input provided'}, status=400)
+
+#         chain = initialize_chain()
+
+#         # Call the asynchronous function properly with await
+#         res = await chain.ainvoke(user_input)
+#         answer = res["answer"]
+
+#         return JsonResponse({'response': answer})
+
+#     elif request.method == 'GET':
+#         # Asynchronous context: manually render template synchronously
+#         html = render_to_string('chat.html')
+#         return HttpResponse(html)
+
+#     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 @csrf_exempt
@@ -108,7 +148,7 @@ def report(request):
     return JsonResponse({'status': 'fail', 'error': 'Invalid request method'}, status=400)
 
 def dashboard_data(request):
-     # General Users: Users with MoreUserInfo but not lawyers
+    # General Users: Users with MoreUserInfo but not lawyers
     general_users_count = MoreUserInfo.objects.filter(user__lawyerdetails__isnull=True).count()
     
     # Lawyers: Users with both MoreUserInfo and LawyerDetails
@@ -123,7 +163,11 @@ def dashboard_data(request):
     # Total Users: All users
     total_users_count = User.objects.count()
 
-    lawyers_by_province = LawyerDetails.objects.select_related('user__address').values('user__address__province').annotate(count=Count('user__address__province'))
+    # Lawyers by Province using Lawyerdataset model
+    lawyers_by_province = Lawyerdataset.objects.values('province').annotate(count=Count('province'))
+
+    booking_status_counts = Booking.objects.values('status').annotate(count=Count('status'))
+
     lawyer_statuses = list(LawyerDetails.objects.values('status').annotate(count=Count('status')))
     handled_queries_count = UnknownQuerys.objects.filter(handled=True).count()
     unhandled_queries_count = UnknownQuerys.objects.filter(handled=False).count()
@@ -135,14 +179,15 @@ def dashboard_data(request):
         'staff_count': staff_count,
         'superusers_count': superusers_count,
         'total_users_count': total_users_count,
-        'lawyers_by_province': list(lawyers_by_province),
+        'lawyers_by_province': list(lawyers_by_province),  # Updated to use Lawyerdataset
         'lawyer_statuses': lawyer_statuses,
         'handled_queries_count': handled_queries_count,
         'unhandled_queries_count': unhandled_queries_count,
         'file_count': file_count,
+         'booking_status_counts': list(booking_status_counts),  # Add this line
     }
-    return JsonResponse(data)
 
+    return JsonResponse(data)
 @csrf_exempt
 async def temp_view(request):
     response = ""

@@ -1,291 +1,194 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbox</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1E1E1E;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            color: #fff;
-        }
+{% extends "admin/base_site.html" %}
 
-        #outer-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-
-        #chat-container {
-            width: 600px;
-            max-width: 100%;
-            background-color: #2C2C2C;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            height: 80vh;
-        }
-
-        #chat-box {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        #input-container {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #3C3C3C;
-            background-color: #2C2C2C;
-        }
-
-        #user-input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #444;
-            border-radius: 5px;
-            margin-right: 10px;
-            background-color: #444;
-            color: #fff;
-        }
-
-        #send-button {
-            padding: 10px 20px;
-            background-color: #ff007b;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #send-button:hover {
-            background-color: #e6006f;
-        }
-
-        .message {
-            display: flex;
-            align-items: flex-start;
-            margin: 10px 0;
-        }
-
-        .user-message {
-            background-color: #007bff;
-            border-radius: 10px;
-            padding: 10px;
-            align-self: flex-end;
-            flex-direction: row-reverse;
-            color: #fff;
-        }
-
-        .bot-message {
-            background-color: #3B3B3B;
-            border-radius: 10px;
-            padding: 10px;
-            align-self: flex-start;
-            color: #fff;
-        }
-
-        .message img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .user-message img {
-            margin-left: 10px;
-            margin-right: 0;
-        }
-
-        .user-message div, .bot-message div {
-            max-width: 70%;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .user-message div {
-            text-align: right;
-        }
-
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-        }
-
-        .typing-indicator img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        /* Typing dots effect */
-        .typing {
-            position: relative;
-        }
-        
-        .typing span {
-            content: '';
-            animation: blink 1.5s infinite;
-            animation-fill-mode: both;
-            height: 10px;
-            width: 10px;
-            background: #fffffff6;
-            position: absolute;
-            left: 0;
-            top: 0;
-            border-radius: 50%;
-        }
-        
-        .typing span:nth-child(2) {
-            animation-delay: .2s;
-            margin-left: 15px;
-        }
-        
-        .typing span:nth-child(3) {
-            animation-delay: .4s;
-            margin-left: 30px;
-        }
-
-        @keyframes blink {
-            0% {
-                opacity: .1;
-            }
-            20% {
-                opacity: 1;
-            }
-            100% {
-                opacity: .1;
-            }
-        }
-
-    </style>
-</head>
-<body>
-    <div id="outer-container">
-        <div id="chat-container">
-            <div id="chat-box">
-                <!-- Initial bot message -->
-                <div class="message bot-message">
-                    <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Bot Icon">
-                    <div>You can ask anything related to the law of Nepal.</div>
-                </div>
+{% block content %}
+    <div class="dashboard-container">
+        <h2>Custom Dashboard</h2>
+        <div class="charts-wrapper">
+            <div class="chart-container">
+                <canvas id="userStatsChart"></canvas>
+                <p>User Types</p>
             </div>
-            <div id="input-container">
-                <input type="text" id="user-input" placeholder="Type your message here...">
-                <button id="send-button">Send</button>
+            <div class="chart-container">
+                <canvas id="lawyersByProvinceChart"></canvas>
+                <p>Lawyers by Province</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="lawyerStatusChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="queryStatsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="fileStatsChart"></canvas>
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sendButton = document.getElementById('send-button');
-            const userInput = document.getElementById('user-input');
-            const chatBox = document.getElementById('chat-box');
 
-            sendButton.addEventListener('click', async () => {
-                const message = userInput.value;
-                if (message.trim() === '') return;
+    <!-- Include Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-                // Display user message
-                chatBox.innerHTML += `
-                    <div class="message user-message">
-                        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="User Icon">
-                        <div>${message}</div>
-                    </div>`;
-                userInput.value = '';
+   
+    <style>
+        .dashboard-container {
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
 
-                // Show typing indicator
-                const typingIndicator = document.createElement('div');
-                typingIndicator.className = 'message bot-message typing-indicator';
-                typingIndicator.innerHTML = `
-                    <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Bot Icon">
-                    <div>
-                        <span class="typing-dots"></span>
-                        <span class="typing-dots"></span>
-                        <span class="typing-dots"></span>
-                    </div>`;
-                chatBox.appendChild(typingIndicator);
+        .charts-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
 
-                // Scroll to the bottom of the chat
-                chatBox.scrollTop = chatBox.scrollHeight;
+        .chart-container {
+            width: 300px;
+            height: 200px;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-                // Send message to backend
-                try {
-                    const response = await fetch('/temp/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch("{% url 'dashboard_data' %}")
+            .then(response => response.json())
+            .then(data => {
+                const chartData = {
+                    user_stats: {
+                        labels: ['General Users', 'Lawyers', 'Staff', 'Superusers', 'Total Users'],
+                        values: [
+                            data.general_users_count,
+                            data.lawyers_count,
+                            data.staff_count,
+                            data.superusers_count,
+                            data.total_users_count
+                        ]
+                    },
+                    lawyers_by_province: {
+                        labels: data.lawyers_by_province.map(lawyer => lawyer['user__address__province']),
+                        values: data.lawyers_by_province.map(lawyer => lawyer.count)
+                    },
+                    lawyer_status: {
+                        labels: data.lawyer_statuses.map(status => status.status),
+                        values: data.lawyer_statuses.map(status => status.count)
+                    },
+                    query_stats: {
+                        labels: ['Handled Queries', 'Unhandled Queries'],
+                        values: [data.handled_queries_count, data.unhandled_queries_count]
+                    },
+                    file_stats: {
+                        labels: ['Total Files'],
+                        values: [data.file_count]
+                    }
+                };
+
+                function createChart(ctx, type, labels, data) {
+                    new Chart(ctx, {
+                        type: type,
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Statistics',
+                                data: data,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
                         },
-                        body: JSON.stringify({ user_input: message }),
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-
-                    const result = await response.json();
-
-                    // Remove typing indicator
-                    chatBox.removeChild(typingIndicator);
-
-                    // // Display bot response
-                    // chatBox.innerHTML += `
-                    //     <div class="message bot-message">
-                    //         <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Bot Icon">
-                    //         <div>${result.response}</div>
-                    //     </div>`;
-                    
-                    // // Scroll to the bottom of the chat
-                    // chatBox.scrollTop = chatBox.scrollHeight;
-
-                    // Display bot response character by character
-                    const botMessageDiv = document.createElement('div');
-                    botMessageDiv.className = 'message bot-message';
-                    botMessageDiv.innerHTML = `
-                        <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Bot Icon">
-                        <div></div>`;
-                    chatBox.appendChild(botMessageDiv);
-
-                    const botMessageTextDiv = botMessageDiv.querySelector('div');
-                    const botResponse = result.response;
-                    let charIndex = 0;
-
-                    function typeChar() {
-                        if (charIndex < botResponse.length) {
-                            botMessageTextDiv.innerHTML += botResponse.charAt(charIndex);
-                            charIndex++;
-                            setTimeout(typeChar, 5);  // Adjust typing speed here
-                        } else {
-                            // Scroll to the bottom of the chat
-                            chatBox.scrollTop = chatBox.scrollHeight;
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            if (context.parsed.y !== null) {
+                                                label += context.parsed.y + ' ' + context.dataset.label;
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
                         }
-                    }
-
-                    typeChar();
-
-
-                } catch (error) {
-                    console.error('Error:', error);
-                    // Remove typing indicator in case of error
-                    chatBox.removeChild(typingIndicator);
+                    });
                 }
-            });
 
-            userInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    sendButton.click();
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+                createChart(
+                    document.getElementById('userStatsChart').getContext('2d'),
+                    'bar',
+                    chartData.user_stats.labels,
+                    chartData.user_stats.values
+                );
+
+                createChart(
+                    document.getElementById('lawyersByProvinceChart').getContext('2d'),
+                    'bar',
+                    chartData.lawyers_by_province.labels,
+                    chartData.lawyers_by_province.values
+                );
+
+                createChart(
+                    document.getElementById('lawyerStatusChart').getContext('2d'),
+                    'pie',
+                    chartData.lawyer_status.labels,
+                    chartData.lawyer_status.values
+                );
+
+                createChart(
+                    document.getElementById('queryStatsChart').getContext('2d'),
+                    'pie',
+                    chartData.query_stats.labels,
+                    chartData.query_stats.values
+                );
+
+                createChart(
+                    document.getElementById('fileStatsChart').getContext('2d'),
+                    'bar',
+                    chartData.file_stats.labels,
+                    chartData.file_stats.values
+                );
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    });
+</script>
+
+{% endblock %}

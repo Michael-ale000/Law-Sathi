@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from NewsPortal.models import MoreUserInfo
 from django import forms
 from django.forms import ModelForm
-from .models import LawyerDetails, Address ,LawyerDocuments
+from .models import LawyerDetails, Address ,LawyerDocuments , Booking
 
 ##UserSignupForm
 class UserSignUpForm(UserCreationForm):
@@ -206,3 +206,52 @@ class LawyerDocumentsForm(forms.ModelForm):
     class Meta:
         model = LawyerDocuments
         fields = ['license_certificate', 'citizenship_document', 'personal_photos']
+
+class BookingForm(forms.ModelForm):
+    TIME_SLOTS = [
+        ('6:00', '6:00AM - 7:00AM'),
+        ('7:00', '7:00AM - 8:00AM'),
+        ('8:00', '8:00AM - 9:00AM '),
+        ('10:00', '10:00AM - 11:00AM'),
+        ('11:00', '11:00AM - 12:00PM'),
+        ('12:00', '12:00PM - 1:00PM'),
+        ('13:00', '1:00PM - 2:00PM'),
+        ('14:00', '2:00PM - 3:00PM'),
+        ('15:00', '3:00PM - 4:00PM'),
+        ('16:00', '4:00PM - 5:00PM'),
+        ('17:00', '5:00PM - 6:00PM'),
+        ('18:00', '6:00PM - 7:00PM'),
+        ('19:00', '7:00PM - 8:00PM')
+    ]
+    date = forms.DateField(widget=forms.SelectDateWidget)
+    time = forms.ChoiceField(choices=TIME_SLOTS, widget=forms.Select)
+    class Meta:
+        model = Booking
+        fields = ['date','time']  # Include time field
+        
+class MeetingLinkForm(forms.Form):
+    meeting_link = forms.URLField(widget=forms.TextInput(attrs={'placeholder': 'Enter meeting link here...'}))
+
+class AddressUpdateForm(forms.ModelForm):
+    PROVINCE_CHOICES = [
+        ('Koshi', 'Koshi'),
+        ('Madhesh', 'Madhesh'),
+        ('Bagmati', 'Bagmati'),
+        ('Gandaki', 'Gandaki'),
+        ('Lumbini', 'Lumbini'),
+        ('Karnali', 'Karnali'),
+        ('Sudurpaschim', 'Sudurpaschim'),
+    ]
+
+    province = forms.ChoiceField(choices=PROVINCE_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Address
+        fields = ['province', 'district', 'location']
+
+        # Optional: Customize form field attributes with widgets
+        widgets = {
+            'district': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter district'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter location'}),
+        }
+

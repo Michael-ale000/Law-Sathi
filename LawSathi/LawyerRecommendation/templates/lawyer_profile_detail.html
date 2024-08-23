@@ -1,0 +1,214 @@
+{% extends 'user_base.html'%}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if lawyer.user%}
+    <title>{{ lawyer.name|default:lawyer.user.first_name }}'s Profile</title>
+    {% else %}
+    <title>{{ lawyer.name }}'s Profile</title>
+    {% endif %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'lawyer_profile_detail.css' %}">
+    <style>
+        /* Custom modal styles using IDs */
+        #customModal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1050; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6); /* Dark background with slight opacity */
+            backdrop-filter: blur(8px); /* Blurs the background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #customModalContent {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px; /* Adjust width based on screen size */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-in-out;
+            transform: scale(0.9); /* Scale effect on load */
+        }
+
+        #customModalContent.show {
+            transform: scale(1);
+        }
+
+        #customModalHeader {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #customModalTitle {
+            margin: 0;
+            font-size: 1.75rem;
+            color: #333;
+        }
+
+        #customModalClose {
+            color: #333;
+            font-size: 1.75rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        #customModalClose:hover {
+            color: #000;
+        }
+
+        #customModalBody {
+            margin: 10px 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        #btnCustom {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #btnCustom:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            #customModalContent {
+                width: 95%;
+                max-width: none; /* Remove max-width on smaller screens */
+            }
+
+            #customModalTitle {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container profile-container">
+        <div class="profile-header">
+            <div class="profile-photo">
+                {% if lawyer.user.lawyerdocuments.personal_photos %}
+                    <img src="{{ lawyer.user.lawyerdocuments.personal_photos.url }}" alt="{{ lawyer.user.username }}">
+                {% else %}
+                    <img src="{{ MEDIA_URL }}documents/personal_photos/default.png" alt="No photo available">
+                {% endif %}
+            </div>
+            <h1>
+                {% if lawyer.name %}
+                    {{ lawyer.name }}
+                {% else %}
+                    {{ lawyer.user.first_name }} {{ lawyer.user.last_name }}
+                {% endif %}
+            </h1>
+
+            <h3>Profile Details</h3>
+            <ul>
+                {% if lawyer.get_model_name == 'lawyerdetails' %}
+                    <li><strong>Experience:</strong> {{ lawyer.experience }} years</li>
+                    <li><strong>Bar License:</strong> {{ lawyer.bar_license }}</li>
+                    <li><strong>Average Case Completion Days:</strong> {{ lawyer.average_case_completion_days }}</li>
+                    <li><strong>Permanent Address:</strong> {{ lawyer.permanent_address }}</li>
+                    <li><strong>Office Address:</strong>{{ lawyer.office_address.location }}{{ lawyer.office_address.distict }} {{ lawyer.office_address.province }}</li>
+                    <li><strong>Status:</strong> {{ lawyer.get_status_display }}</li>
+                    <li><strong>Rating:</strong>  
+                        {% if lawyer.rating %}
+                            {{ lawyer.rating }} ★
+                        {% else %}
+                            {{ lawyer.Rating }} ★
+                        {% endif %}
+                    </li>
+                {% elif lawyer.get_model_name == 'lawyerdataset' %}
+                    <li><strong>Experience:</strong> {{ lawyer.experience }} years</li>
+                    <li><strong>Bar License:</strong> {{ lawyer.bar_license }}</li>
+                    <li><strong>Average Case Completion Days:</strong> {{ lawyer.average_case_completion_days }}</li>
+                    <li><strong>Rating:</strong> {{ lawyer.rating }} ★</li>
+                    <li><strong>Province:</strong> {{ lawyer.province }}</li>
+                {% endif %}
+            </ul>
+            {% if lawyer.get_model_name == 'lawyerdetails' %}
+            <button type="button" class="btn btn-primary mt-4" id="openCustomModalButton">
+                    Book a Consultation
+                </button>
+            {% endif %}
+        </div>
+    </div>
+    {% if lawyer.get_model_name == 'lawyerdetails' %}
+    <!-- Booking Modal -->
+    <div id="customModal">
+        <div id="customModalContent">
+            <div id="customModalHeader">
+                <h5 id="customModalTitle">Book a Consultation</h5>
+                <span id="customModalClose">&times;</span>
+            </div>
+            <div id="customModalBody">
+                <form method="post" action="{% url 'lawyer_book' lawyer.user_id %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="text-center mt-3">
+                        <button type="submit" id="btnCustom">Book Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {%endif %}
+    
+{% endblock %}
+{%block script%}
+<!-- Bootstrap JS and dependencies -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var openModalButton = document.getElementById('openCustomModalButton');
+        var closeModalButton = document.getElementById('customModalClose');
+        var customModal = document.getElementById('customModal');
+        var customModalContent = document.getElementById('customModalContent');
+
+        // Open modal
+        openModalButton.onclick = function() {
+            customModal.style.display = 'flex';
+            setTimeout(function() {
+                customModalContent.classList.add('show');
+            }, 10); // Delay to allow CSS transition
+        }
+
+        // Close modal
+        closeModalButton.onclick = function() {
+            customModalContent.classList.remove('show');
+            setTimeout(function() {
+                customModal.style.display = 'none';
+            }, 250); // Delay to match CSS transition duration
+        }
+
+        // Close modal if user clicks outside of the modal content
+        window.onclick = function(event) {
+            if (event.target == customModal) {
+                customModalContent.classList.remove('show');
+                setTimeout(function() {
+                    customModal.style.display = 'none';
+                }, 300); // Delay to match CSS transition duration
+            }
+        }
+    });
+</script>
+{% endblock %}

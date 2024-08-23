@@ -8,6 +8,16 @@ urlpatterns=[
     path('logout/',views.logout,name='logout'),
     path('test',views.test,name='test'),
     path('lawyersearch/', views.lawyersearch, name='lawyersearch'),
+    path('lawyer/dataset/<int:lawyer_id>/', views.lawyer_profile_detail_dataset, name='lawyer_profile_detail_dataset'),
+    path('lawyer/details/<int:lawyer_id>/', views.lawyer_profile_detail_details, name='lawyer_profile_detail_details'),
+    path('lawyer_book/<int:lawyer_id>/', views.lawyer_book, name='lawyer_book'),
+    path('see_bookings/', views.see_bookings, name='see_bookings'),
+    path('send_meeting_link/<int:booking_id>/', views.send_meeting_link, name='send_meeting_link'),
+    path('lawyer_settings/', views.lawyer_settings, name='lawyer_settings'),
+    path('lawyer_settings/', views.lawyer_settings, name='lawyer_settings'),
+    path('mark-as-completed/<int:booking_id>/', views.mark_as_completed, name='mark_as_completed'),
+    
+
     # path('lawyerlogin/',views.lawyer_login,name='lawyerlogin'),
    
 ]

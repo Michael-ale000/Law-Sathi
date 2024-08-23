@@ -1,74 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Lawyer</title>
-</head>
-<body>
-    <h2>Create Lawyer</h2>
-    <form method="post" action= "{%url 'test'%}" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{details_form.as_p}}
-        {% if details_form.errors %}
-            <ul>
-                {% for error in details_form.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        {{office_address_form.as_p}}
-        {% if office_address_form.errors %}
-            <ul>
-                {% for error in office_address_form.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <button type="submit">Submit</button>
-    </form>
-        
-        <!-- <h3>Permanent Address</h3>
-        {{ permanent_address_form.as_p }} -->
-        
-        <!-- <h3>Office Address</h3>
-        {{ office_address_form.as_p }}
-        
-        <h3>Lawyer Details</h3>
-        {{ details_form.as_p }}
-        
-        <h3>Lawyer Documents</h3>
-        {{ documents_form.as_p }}
-         -->
-        <!-- <button type="submit">Create Lawyer</button>
-    </form>
-    <script>
-        const districtsByprovince = {
-        koshi: ['Bhojpur', 'Dhankuta', 'Ilam', 'Jhapa', 'Khotang', 'Morang', 'Okhaldhunga', 'Pachthar', 'Sankhuwasabha', 'Solukhumbu', 'Sunsari', 'Taplejung', 'Terhathum', 'Udayapur' ],
-        madhesh: ['Parsa', 'Bara', 'Rautahat', 'Sarlahi', 'Siraha', 'Dhanusha', 'Saptari', 'Mahottari'],
-        bagmati: ['Bhaktapur', 'Chitwan', 'Dhading', 'Dolakha', 'Kathmandu', 'Kavrepalanchok', 'Lalitpur', 'Makwanpur', 'Nuwakot', 'Ramechap', 'Rasuwa', 'Sindhuli', 'Sindhupalchok'],
-        gandaki: ['Baglung', 'Gorkha', 'Kaski', 'Lamjung', 'Manang', 'Mustang', 'Myagdi', 'Nawalpur', 'Parwat', 'Syangja', 'Tanahun'],
-        lumbini: ['Kapilvastu', 'Parasi', 'Rupandehi', 'Arghakhanchi', 'Gulmi', 'Palpa', 'Dang', 'Pyuthan', 'Rolpa', 'Eastern Rukum', 'Banke', 'Bardiya'],
-        karnali: ['Western Rukum', 'Salyan', 'Dolpa', 'Humla', 'Jumla', 'Kalikot', 'Mugu', 'Surkhet', 'Dailekh', 'Jajarkot'],
-        sudurpaschim: ['Darchula', 'Bajhang', 'Bajura', 'Baitadi', 'Doti', 'Acham', 'Dadeldhura', 'Kanchanpur', 'Kailali'],
-    };
-    
-    function populateDistricts() {
-        const provinceSelect = document.getElementById('province');
-        const districtSelect = document.getElementById('district');
-        const selectedprovince = provinceSelect.value;
-    
-        // Clear previous options
-        districtSelect.innerHTML = '<option value="" disabled selected>Select a district</option>';
-    
-        if (selectedprovince in districtsByprovince) {
-            districtsByprovince[selectedprovince].forEach(district => {
-                const option = document.createElement('option');
-                option.value = district;
-                option.textContent = district;
-                districtSelect.appendChild(option);
-            });
-        }
-    }
-    </script> -->
-</body>
-</html>
+{% extends 'base.html'%}
+{% load static %}
+</div>
+<div class="navitem" id="top-right-user-icon"  onclick="toggleUserDetails()">
+    <i class="fas fa-user-circle loading-screen-other-icons" style="font-size: 40px"></i>
+  <!-- <div id="user-details" class="user-details hidden">
+    <p><strong>Username:</strong> <span class="user-detail">{{ request.user.username }}</span></p>
+<p><strong>Email:</strong> <span class="user-detail">{{ request.user.email }}</span></p>
+<p><strong>Phone Number:</strong> <span class="user-detail">{{ request.user.moreuserinfo.phone_number }}</span></p>
+<p><strong>Gender:</strong> <span class="user-detail">{{ request.user.moreuserinfo.gender }}</span></p>
+<p><strong>Date of Birth:</strong> <span class="user-detail">{{ request.user.moreuserinfo.dob }}</span></p>
+</div> -->
+
+</div>
+</div>
+</div>

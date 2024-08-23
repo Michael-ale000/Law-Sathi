@@ -457,3 +457,14 @@ body {
   background-color: white;
   opacity: 8%;
 }
+/* Remove underline and highlight for a specific anchor tag */
+#no-highlight {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Ensure the link color matches the surrounding text */
+}
+
+/* Optional: Remove background highlight on hover/focus */
+#no-highlight:hover, #no-highlightt:focus {
+  background-color: transparent; /* Remove any background color */
+  outline: none; /* Remove any focus outline */
+}

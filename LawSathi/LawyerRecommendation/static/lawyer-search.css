@@ -4,7 +4,16 @@ body {
     padding: 0;
     box-sizing: border-box;
 }
+a {
+    background-color: transparent; /* Remove background highlighting */
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Ensure the text color matches the surrounding text */
+}
 
+a:hover {
+    color: #000000; /* Optional: Change color on hover (black in this case) */
+    text-decoration: none; /* Ensure underline is not added on hover */
+}
 .search-container {
     display: flex;
     flex-direction: column;

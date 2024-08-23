@@ -1,0 +1,204 @@
+{% extends 'lawyer_base.html' %}
+{% load static %}
+{% block title %}
+    <title>My Bookings</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #12394a;
+        }
+
+        /* Centering the Container */
+        #booking-container {
+            margin: 0 auto;
+            max-width: 950px;
+            padding-top: 100px; /* Controls top spacing */
+        }
+
+        /* Centering and Styling the Content */
+        #booking-content {
+            background-color: #154458;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #booking-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        /* Date Filter Styling */
+        #date-filter {
+            margin-bottom: 20px;
+        }
+
+        #date-filter label {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        #booking-date {
+            max-width: 250px;
+            margin: 0 auto;
+            color: white;
+        }
+
+        /* Styling the Table */
+        #bookings-table {
+            background-color: #f5ebebdd;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+        }
+
+        #bookings-table th, #bookings-table td {
+            text-align: center;
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        #bookings-table thead {
+            background-color: #007bff;
+            color: rgb(255, 255, 255);
+        }
+
+        #bookings-table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Badge Styling */
+        .badge {
+            font-size: 90%;
+            padding: 5px 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #booking-title {
+                font-size: 2rem;
+            }
+
+            #bookings-table {
+                font-size: 14px;
+            }
+
+            #booking-container {
+                padding-top: 150px; /* Adjusts top spacing for mobile */
+                max-width: 100%; /* Full width on mobile */
+            }
+
+            #booking-content {
+                padding: 20px;
+            }
+
+            #date-filter {
+                text-align: center;
+            }
+
+            #booking-date {
+                width: 100%;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div id="booking-container" class="container">
+    <div id="booking-content" class="text-center">
+        <h1 id="booking-title">My Bookings</h1>
+
+        <!-- Status Filter Dropdown -->
+        <div class="mb-4">
+            <label for="status-filter" class="form-label" style="color: white;">Filter by Status:</label>
+            <select id="status-filter" class="form-control" onchange="filterBookingsByStatus()">
+                <option value="all">All</option>
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+            </select>
+        </div>
+
+        <!-- Table Header with Centered Title -->
+        <div class="table-responsive mt-4 mx-auto">
+            <table id="bookings-table" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th colspan="6" class="text-center" id="table-header-title">Bookings</th>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>Link</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bookings-body">
+                    {% for booking in bookings %}
+                    <tr data-status="{{ booking.status }}">
+                        <td>{{ booking.date }}</td>
+                        <td>{{ booking.time }}</td>
+                        <td>{{ booking.client.username }}</td>
+                        <td>
+                            {% if booking.status == 'completed' %}
+                                <span class="badge badge-success">Completed</span>
+                            {% else %}
+                                <span class="badge badge-warning">Pending</span>
+                            {% endif %}
+                        </td>
+                        {% if booking.status != 'completed' %}
+                        <td>
+                            {% if booking.meeting_link %}
+                                <a href="{{ booking.meeting_link }}" target="_blank">Meeting Link</a>
+                            {% else %}
+                                <form method="post" action="{% url 'send_meeting_link' booking.id %}">
+                                    {% csrf_token %}
+                                    <input type="text" name="meeting_link" placeholder="Enter meeting link here..." class="form-control">
+                                    <button type="submit" class="btn btn-primary mt-2">Send</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="post" class="d-inline" action="{% url 'mark_as_completed' booking.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                <button type="submit" class="btn btn-sm btn-success">Mark as Completed</button>
+                            </form>
+                        </td>
+                        {% else %}
+                        <td colspan="2"></td> <!-- Empty cells for completed bookings -->
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    // Function to filter bookings by status
+    function filterBookingsByStatus() {
+        var selectedStatus = document.getElementById("status-filter").value.toLowerCase();
+        var bookings = document.querySelectorAll("#bookings-body tr");
+
+        bookings.forEach(function(booking) {
+            var bookingStatus = booking.getAttribute("data-status").toLowerCase();
+
+            // Check if booking status matches the selected status
+            if (selectedStatus === "all" || bookingStatus === selectedStatus) {
+                booking.style.display = "";
+            } else {
+                booking.style.display = "none";
+            }
+        });
+    }
+</script>
+{% endblock %}

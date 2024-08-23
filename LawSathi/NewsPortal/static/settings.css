@@ -12,45 +12,45 @@ body {
     height: 100vh;
 }
 .container {
-    width: 90%;
-    max-width: 600px;
-    background-color: #ffffff;
+    width: 100%;
+    max-width: 800px;
+    background-color: #154458;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: 20px;
+    padding: 40px;
+    margin: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
     left:50%;
     top:25%;
-    transform: translate(60%,14%);
+    transform: translate(40%,14%);
 }
 
 h1 {
     font-size: 26px;
     margin-bottom: 10px;
     text-align: center;
-    color: #2c3e50;
+    color: #fcfcfc;
 }
 
 .username {
-    font-size: 18px;
+    font-size: 20px;
     color: #7f8c8d;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     text-align: center;
 }
 
 .form-group {
-    width: 100%;
+    width: 150%;
     margin-bottom: 15px;
     position: relative;
 }
 
 label {
     display: block;
-    font-size: 14px;
-    color: #34495e;
+    font-size: 18px;
+    color: #fefefe;
     margin-bottom: 5px;
 }
 
@@ -61,10 +61,10 @@ input[type="password"],
 input[type="tel"], 
 select {
     width: 100%;
-    padding: 12px;
+    padding: 18px;
     border: 1px solid #bdc3c7;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 18px;
     box-sizing: border-box;
     transition: all 0.3s ease;
 }

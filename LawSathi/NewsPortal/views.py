@@ -10,9 +10,11 @@ from django.contrib.auth import authenticate,login,logout
 from LawyerRecommendation.models import LawyerDetails
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 load_dotenv()
 
+@login_required
 def user_landingpage(request):
     try:
         api_key = os.getenv("Newsportal_api")
@@ -113,11 +115,11 @@ def user_login(request):
         return HttpResponse(f"Error Occurred: {e}")
     
 
-
+@login_required
 def logout(request):
     try:
         logout(request)
-        messages.success(request,"Loged Out.")
+        # messages.success(request,"Loged Out.")
         return redirect('login')  # Redirect to the home page or any other page
     except Exception as e:
         return HttpResponse(f"Error Occurred: {e}")
@@ -133,7 +135,8 @@ def choose(request):
         return render(request,'choose.html')
     except Exception as e:
         return HttpResponse(f"Error Occurred: {e}")
-    
+
+@login_required    
 def settings(request):
     try:
         if request.method == "POST":

@@ -56,7 +56,7 @@
 
     #send-button {
         padding: 10px 20px;
-        background-color: #ff007b;
+        background-color: #2980b9;
         color: white;
         border: none;
         border-radius: 5px;
@@ -64,7 +64,7 @@
     }
 
     #send-button:hover {
-        background-color: #e6006f;
+        background-color: #2980b9;
     }
 
     .message {
@@ -157,7 +157,7 @@
 
 /* Style for the report button */
 .report-button {
-    background-color: #ff5722;
+    background-color: #031d2e;
     color: #fff;
     border: none;
     padding: 5px 10px;
@@ -169,7 +169,7 @@
 }
 
 .report-button:hover {
-    background-color: #e64a19;
+    background-color: #05283f;
 }
 
 </style>
@@ -188,6 +188,17 @@
             </div>
         </div>
         <!-- Messages will be appended here -->
+        {% for message in conversation %}
+        <div class="message user-message">
+            <img src="https://www.w3schools.com/howto/img_avatar.png" alt="User Icon">
+            <div>{{ message.user }}</div>
+            <button class="report-button">Report</button>
+        </div>
+        <div class="message bot-message">
+            <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Bot Icon">
+            <div>{{ message.bot }}</div>
+        </div>
+    {% endfor %}
     </div>
     <div id="input-container">
         <input type="text" id="user-input" placeholder="Type your message here...">

@@ -49,6 +49,9 @@ class LawyerDetails(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     Rating = models.IntegerField(default=0)
 
+    def get_model_name(self):
+        return 'lawyerdetails'
+
     def calculate_experience_rating(self):
         experience = int(self.experience)  # Explicitly cast to integer
         print(f"Experience: {experience}")  # Debug statement
@@ -120,6 +123,8 @@ class Lawyerdataset(models.Model):
         
     def __str__(self):
         return self.name
+    def get_model_name(self):
+        return 'lawyerdataset'
 
 @receiver(post_save, sender=LawyerDetails)
 def accept_or_reject_email(sender, instance, created, **kwargs):
@@ -140,6 +145,18 @@ def accept_or_reject_email(sender, instance, created, **kwargs):
         to_email = instance.user.email  # Lawyer's email address
         send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
 
-# defining models form pdf to be uplaoded by admin 
+# defining models for lawyer booking
+class  Booking (models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bookings")
+    lawyer = models.ForeignKey(LawyerDetails, on_delete=models.CASCADE, related_name="bookings")
+    date = models.DateField()
+    time = models.TimeField()  # Add the time field
+    status = models.CharField(max_length=20, choices=[('Pending', 'Pending'), ('Completed', 'Completed'), ('Cancelled', 'Cancelled')] ,default='Pending')
+    meeting_link = models.URLField(blank=True, null=True)
+    room_id = models.IntegerField(blank=True,null=True)
+    class Meta:
+        unique_together = ('lawyer', 'date', 'time')  # Ensure no double bookings
 
+    def __str__(self):
+        return f"{self.client.username} booked {self.lawyer.user.username} on {self.date} at {self.time}"
 

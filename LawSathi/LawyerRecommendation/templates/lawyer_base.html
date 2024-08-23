@@ -18,15 +18,9 @@
     <div class="header">
         <img src="{% static 'lawsathi.png' %}" alt="logo" class="logo">
         <div class="headerItems">
-            <div class="navitem">
-                <i class="fas fa-comment"></i>
-            </div>    
-            <div class="navitem">
-                <i class="fas fa-bell loading-screen-other-icons"></i>
-            </div>
-            <div class="navitem">
-                <i class="fas fa-user-circle loading-screen-other-icons" style="font-size: 40px"></i>
-            </div>
+          <div class="navitem" id="top-right-user-icon">
+            <a id="top-logout" href="{% url 'logout'%}"><i class="fas fa-user-circle loading-screen-other-icons" style="font-size: 40px"></i></a>
+        </div>
         </div>
     </div>
     
@@ -53,7 +47,14 @@
                 <span class="tooltip">Conference</span>
               </li>
               <li>
-                <a href="">
+              <a href="{% url 'see_bookings'%}">
+                <i class="bx bx-cog"></i>
+                <span class="links_name">Bookings</span>
+              </a>
+              <span class="tooltip">Settings</span>
+            </li>
+              <li>
+                <a href="{%url 'lawyer_settings' %}">
                   <i class="bx bx-cog"></i>
                   <span class="links_name">Settings</span>
                 </a>
